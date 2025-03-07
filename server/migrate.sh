@@ -1,0 +1,1 @@
+sequelize-auto -h "127.0.0.1" -d "community" -u "root" -x "pzj20162116" -p "3306"  --dialect mysql
