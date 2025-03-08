@@ -18,6 +18,51 @@ const routes = [
           title: "编辑用户信息",
         },
       },
+      {
+        path: "/repair",
+        component: () => import("@/views/repair/index.vue"),
+        name: "Repair",
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/repair/type/index.vue"),
+            name: "RepairType",
+          },
+          {
+            path: "list",
+            component: () => import("@/views/repair/list/index.vue"),
+            name: "RepairList",
+          },
+        ],
+      },
+      {
+        path: "/order",
+        name: "Order",
+        component: () => import("@/views/order/index.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/order/list/list.vue"),
+            name: "OrderList",
+          },
+          {
+            path: "payment",
+            component: () => import("@/views/order/payment/index.vue"),
+            name: "OrderPayment",
+          },
+        ],
+      },
+      {
+        path: "test",
+        component: () => import("@/views/test/index.vue"),
+        children: [
+          {
+            path: "payment",
+            component: () => import("@/views/order/payment/index.vue"),
+            name: "OrderPayment",
+          },
+        ],
+      },
     ],
   },
   {

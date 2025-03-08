@@ -30,5 +30,5 @@ sequelize
   });
 
 db.UserModel = require("../models/users")(sequelize, Sequelize.DataTypes);
-
+db.RepairsModel = require("../models/repairs")(sequelize, Sequelize.DataTypes);
 module.exports = db;

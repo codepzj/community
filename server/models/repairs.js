@@ -15,14 +15,38 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    description: {
-      type: DataTypes.TEXT,
+    name: {
+      type: DataTypes.STRING(50),
       allowNull: false
     },
+    phone: {
+      type: DataTypes.STRING(20),
+      allowNull: false
+    },
+    region: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    address: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    report_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     status: {
-      type: DataTypes.ENUM('pending','in_progress','completed'),
+      type: DataTypes.ENUM('in_pay','pending','in_progress','completed'),
       allowNull: true,
-      defaultValue: "pending"
+      defaultValue: "in_pay"
     },
     assigned_worker: {
       type: DataTypes.INTEGER,

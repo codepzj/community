@@ -1,6 +1,5 @@
 const userService = require("../service/users");
 const { success, failOnServer } = require("../utils/wrap");
-const fs = require("fs");
 
 class UserController {
   async createUser(req, res) {

@@ -54,8 +54,8 @@ import { ref } from "vue";
 import GoBack from "@/components/goback.vue";
 import wxIcon from "@/assets/wx.png";
 import alipayIcon from "@/assets/alipay.png";
-import cardIcon from "@/assets/card.png";
-import cashIcon from "@/assets/cash.png";
+import cardIcon from "@/assets/card.svg";
+import cashIcon from "@/assets/cash.svg";
 
 // 假数据
 const tableData = ref([

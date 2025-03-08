@@ -7,26 +7,38 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    user_id: {
+    repair_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'repairs',
         key: 'id'
       }
     },
-    type: {
-      type: DataTypes.ENUM('payment','repair'),
-      allowNull: false
+    amount: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: true
     },
-    reference_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    payment_method: {
+      type: DataTypes.ENUM('cash','wechat','alipay','card'),
+      allowNull: true
+    },
+    payment_proof: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
     status: {
-      type: DataTypes.ENUM('pending','completed'),
+      type: DataTypes.ENUM('pending','paid','completed','cancelled'),
       allowNull: true,
       defaultValue: "pending"
+    },
+    paid_at: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    completed_at: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,
@@ -42,10 +54,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "user_id",
+        name: "repair_id",
         using: "BTREE",
         fields: [
-          { name: "user_id" },
+          { name: "repair_id" },
         ]
       },
     ]

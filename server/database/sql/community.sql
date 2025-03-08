@@ -36,8 +36,14 @@ CREATE TABLE payments (
 CREATE TABLE repairs (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,                   -- 关联用户
-    description TEXT NOT NULL,              -- 报修内容
-    status ENUM('pending', 'in_progress', 'completed') DEFAULT 'pending', -- 报修状态
+    name VARCHAR(50) NOT NULL,              -- 姓名
+    phone VARCHAR(20) NOT NULL,             -- 电话
+    region VARCHAR(50) NOT NULL,            -- 地址
+    address VARCHAR(255) NOT NULL,          -- 详细地址
+    report_date DATE NOT NULL,              -- 申报时间
+    type VARCHAR(255) NOT NULL,             -- 报修类型
+    description TEXT NULL,          -- 报修内容
+    status ENUM("in_pay", "pending", "in_progress", "completed") DEFAULT "in_pay", -- 报修状态
     assigned_worker INT NULL,               -- 维修人员（工作人员 ID）
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -48,12 +54,15 @@ CREATE TABLE repairs (
 -- 订单表 (orders)
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,              -- 关联用户
-    type ENUM('payment', 'repair') NOT NULL,  -- 订单类型
-    reference_id INT NOT NULL,         -- 关联的 payment_id 或 repair_id
-    status ENUM('pending', 'completed') DEFAULT 'pending',
+    repair_id INT NOT NULL,                  -- 关联报修工单
+    amount DECIMAL(10,2) NULL,               -- 订单金额
+    payment_method ENUM('cash', 'wechat', 'alipay', 'card') NULL, -- 支付方式
+    status ENUM('pending', 'paid', 'completed', 'cancelled') DEFAULT 'pending', -- 订单状态
+    paid_at TIMESTAMP NULL,                  -- 支付时间
+    completed_at TIMESTAMP NULL,             -- 订单完成时间
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE
 );
 
 -- 论坛帖子表 (posts)

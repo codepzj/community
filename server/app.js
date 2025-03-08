@@ -4,6 +4,7 @@ const logger = require("./middleware/logger");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
+const repairsRouter = require("./routes/repairs");
 
 // 解析请求体
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(express.static("public"));
 // 路由分组
 app.use("/", indexRouter);
 app.use("/user", usersRouter);
+app.use("/repair", repairsRouter);
 
 // 路由未匹配
 app.use("*", (req, res) => {
