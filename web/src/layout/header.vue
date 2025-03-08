@@ -5,7 +5,7 @@
     class="flex items-center justify-between"
   >
     <div class="flex items-center justify-center">
-      <el-menu-item>
+      <el-menu-item @click="router.push('/')">
         <img
           style="width: 100px"
           src="https://element-plus.org/images/element-plus-logo.svg"

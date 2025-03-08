@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require("../middleware/multer");
 const router = express.Router();
 
 const {
@@ -8,8 +9,10 @@ const {
   UploadUserAvatar,
 } = require("../controller/user");
 
+
+
 router.post("/create", createUser);
 router.post("/login", findUserIsExist);
 router.put("/update", updateUser);
-router.post("/uploadAvatar", UploadUserAvatar);
+router.post("/uploadAvatar", upload.single("file"), UploadUserAvatar);
 module.exports = router;

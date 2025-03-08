@@ -1,71 +1,40 @@
 <template>
   <el-upload
-    class="avatar-uploader"
+    ref="upload"
+    class="upload-demo"
     action="http://localhost:3000/user/uploadAvatar"
-    :show-file-list="false"
-    :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload"
+    :limit="1"
+    :on-exceed="handleExceed"
+    :auto-upload="false"
   >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+    <template #trigger>
+      <el-button type="primary">select file</el-button>
+    </template>
+    <el-button class="ml-3" type="success" @click="submitUpload">
+      upload to server
+    </el-button>
+    <template #tip>
+      <div class="el-upload__tip text-red">
+        limit 1 file, new file will cover the old file
+      </div>
+    </template>
   </el-upload>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+<script setup>
+import { ref } from 'vue';
+import { genFileId } from 'element-plus';
 
-import type { UploadProps } from 'element-plus'
+const upload = ref();
 
-const imageUrl = ref('')
+const handleExceed = (files) => {
+  upload.value.clearFiles();
+  const file = files[0];
+  file.uid = genFileId();
+  upload.value.handleStart(file);
+};
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response,
-  uploadFile
-) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-}
-
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
-  }
-  return true
-}
+const submitUpload = () => {
+  upload.value.submit();
+};
 </script>
-
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
-</style>

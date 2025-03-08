@@ -1,3 +1,4 @@
+// 返回数据格式
 let ResponseData = (code, msg, data) => {
   return {
     code,
@@ -10,12 +11,17 @@ const success = (msg, data) => {
   return ResponseData(200, msg, data);
 };
 
-const fail = (msg) => {
+const failOnClient = (msg) => {
+  return ResponseData(400, msg, null);
+};
+
+const failOnServer = (msg) => {
   return ResponseData(500, msg, null);
 };
 
 module.exports = {
   ResponseData,
   success,
-  fail,
+  failOnClient,
+  failOnServer,
 };

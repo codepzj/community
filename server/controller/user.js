@@ -1,5 +1,7 @@
 const userService = require("../service/users");
-const { success, fail } = require("../utils/wrap");
+const { success, failOnServer } = require("../utils/wrap");
+const fs = require("fs");
+
 class UserController {
   async createUser(req, res) {
     const { username, password, email, avatar, phone, address } = req.body;
@@ -15,7 +17,7 @@ class UserController {
       });
       res.json(success("创建用户成功", user));
     } catch (error) {
-      res.status(500).json(fail(error.message));
+      res.json(failOnServer(error.message));
     }
   }
 
@@ -25,7 +27,7 @@ class UserController {
       const user = await userService.findUserIsExist({ username, password });
       res.json(success("查询用户成功", user));
     } catch (error) {
-      res.json(fail(error.message));
+      res.json(failOnServer(error.message));
     }
   }
 
@@ -41,14 +43,19 @@ class UserController {
       });
       res.json(success("更新用户成功", user));
     } catch (error) {
-      res.json(fail(error.message));
+      res.json(failOnServer(error.message));
     }
   }
 
   async UploadUserAvatar(req, res) {
-    const { id } = req.body;
-    console.log(req);
-
+    if (!req.file) {
+      return res.json(failOnClient("未上传文件"));
+    }
+    const data = {
+      filename: req.file.filename,
+      filepath: `/uploads/${req.file.filename}`,
+    };
+    res.json(success("上传成功", data));
   }
 }
 
