@@ -46,7 +46,7 @@ const routes = [
             name: "OrderList",
           },
           {
-            path: "payment",
+            path: "payment/:cart_id",
             component: () => import("@/views/order/payment/index.vue"),
             name: "OrderPayment",
           },

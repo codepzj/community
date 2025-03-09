@@ -73,10 +73,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useCartStore } from "@/store/carts";
+import { useUserStore } from "@/store/users";
 import { storeToRefs } from "pinia";
 import { showMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
-
+import { addCart } from "@/api/cart";
 const props = defineProps({
   drawerVisible: {
     type: Boolean,
@@ -89,6 +90,8 @@ const emit = defineEmits(["update:drawerVisible"]);
 const router = useRouter();
 const cartStore = useCartStore();
 const { cart } = storeToRefs(cartStore);
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 const direction = ref("rtl");
 
 const totalPrice = computed(() => {
@@ -110,11 +113,34 @@ const handleClearCart = () => {
   showMessage("购物车已清空");
 };
 
-const handlePay = () => {
-  emit("update:drawerVisible", false);
-  setTimeout(() => {
-    router.push({ name: "OrderPayment" });
-  }, 1000);
+const handlePay = async () => {
+  const cartList = cart.value.map((item) => ({
+    user_id: user.value.id,
+    goods_id: item.id,
+    goods_num: item.num,
+  }));
+  try {
+    const res = await addCart({
+      cartList,
+    });
+    if (res.code === 200) {
+      if (res.data.length > 0) {
+        emit("update:drawerVisible", false);
+        setTimeout(() => {
+          router.push({
+          name: "OrderPayment",
+            params: { cart_id: res.data[0].cart_id },
+          });
+        }, 1000);
+      } else {
+        showMessage("购物车空空如也，快去选购吧！");
+      }
+    } else {
+      showMessage(res.msg);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 

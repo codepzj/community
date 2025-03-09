@@ -7,32 +7,48 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    order_id: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
     repair_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'repairs',
         key: 'id'
       }
     },
-    amount: {
+    cart_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'carts',
+        key: 'id'
+      }
+    },
+    order_type: {
+      type: DataTypes.ENUM('repair','goods','repair_goods'),
+      allowNull: false
+    },
+    order_amount: {
       type: DataTypes.DECIMAL(10,2),
-      allowNull: true
+      allowNull: false
     },
-    payment_method: {
-      type: DataTypes.ENUM('cash','wechat','alipay','card'),
-      allowNull: true
-    },
-    status: {
+    order_status: {
       type: DataTypes.ENUM('pending','paid','completed','cancelled'),
       allowNull: true,
       defaultValue: "pending"
     },
-    paid_at: {
+    order_payment_method: {
+      type: DataTypes.ENUM('cash','wechat','alipay','card'),
+      allowNull: true
+    },
+    order_payment_time: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    completed_at: {
+    order_completed_time: {
       type: DataTypes.DATE,
       allowNull: true
     }
@@ -54,6 +70,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "repair_id" },
+        ]
+      },
+      {
+        name: "cart_id",
+        using: "BTREE",
+        fields: [
+          { name: "cart_id" },
         ]
       },
     ]

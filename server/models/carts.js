@@ -1,11 +1,15 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('payments', {
+  return sequelize.define('carts', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
+    },
+    cart_id: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
     user_id: {
       type: DataTypes.INTEGER,
@@ -15,26 +19,21 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    amount: {
-      type: DataTypes.DECIMAL(10,2),
+    goods_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'goods',
+        key: 'id'
+      }
+    },
+    goods_num: {
+      type: DataTypes.INTEGER,
       allowNull: false
-    },
-    status: {
-      type: DataTypes.ENUM('pending','paid'),
-      allowNull: true,
-      defaultValue: "pending"
-    },
-    due_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
-    paidAt: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'payments',
+    tableName: 'carts',
     timestamps: true,
     indexes: [
       {
@@ -50,6 +49,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "user_id" },
+        ]
+      },
+      {
+        name: "goods_id",
+        using: "BTREE",
+        fields: [
+          { name: "goods_id" },
         ]
       },
     ]

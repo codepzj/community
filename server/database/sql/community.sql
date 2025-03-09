@@ -64,7 +64,7 @@ CREATE TABLE repairs (
 -- 购物车表 (carts)
 CREATE TABLE carts (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    cart_id VARCHAR(255) NOT NULL,  -- 购物车ID
+    cart_id VARCHAR(255) NULL,  -- 购物车ID
     user_id INT NOT NULL,
     goods_id INT NOT NULL,
     goods_num INT NOT NULL,

@@ -1,5 +1,5 @@
 <template>
-  888
+  {{ cart_id }}
   <div class="p-4">
     <go-back title="支付订单" />
     <el-table :data="tableData" border style="width: 100%">
@@ -51,18 +51,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import GoBack from "@/components/goback.vue";
 import wxIcon from "@/assets/wx.png";
 import alipayIcon from "@/assets/alipay.png";
 import cardIcon from "@/assets/card.png";
 import cashIcon from "@/assets/cash.png";
-
+import { getCart } from "@/api/cart";
+const route = useRoute();
+const cart_id = route.params.cart_id;
 // 假数据
 const tableData = ref([
   { id: 1001, amount: 199.99, status: "pending" },
-  { id: 1002, amount: 89.50, status: "paid" },
-  { id: 1003, amount: 300.00, status: "pending" },
+  { id: 1002, amount: 89.5, status: "paid" },
+  { id: 1003, amount: 300.0, status: "pending" },
   { id: 1004, amount: 159.99, status: "completed" },
 ]);
 
@@ -98,13 +101,25 @@ const confirmPayment = () => {
 
 // 状态映射
 const getStatusLabel = (status) => {
-  return { pending: "待支付", paid: "已支付", completed: "已完成" }[status] || "未知";
+  return (
+    { pending: "待支付", paid: "已支付", completed: "已完成" }[status] || "未知"
+  );
 };
 
 // 状态颜色
 const getStatusTagType = (status) => {
-  return { pending: "danger", paid: "success", completed: "info" }[status] || "info";
+  return (
+    { pending: "danger", paid: "success", completed: "info" }[status] || "info"
+  );
 };
+onMounted(async () => {
+  try {
+    const res = await getCart(cart_id);
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+});
 </script>
 
 <style scoped>
