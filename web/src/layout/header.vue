@@ -12,8 +12,17 @@
           alt="Element logo"
         />
       </el-menu-item>
+      <el-menu-item @click="router.push('/goods')"> 器具购买 </el-menu-item>
     </div>
     <div class="flex items-center justify-center">
+      <el-badge :value="cartGoodsNum">
+        <el-button
+          circle
+          size="large"
+          :icon="ShoppingCart"
+          @click="cartDrawerVisible = true"
+        ></el-button>
+      </el-badge>
       <el-sub-menu v-if="!user" index="1">
         <template #title><el-avatar :icon="UserFilled" /></template>
         <el-menu-item index="1-1" @click="loginDialogVisible = true"
@@ -93,19 +102,30 @@
       >
     </template>
   </el-dialog>
+  <CartDrawer
+    :drawer-visible="cartDrawerVisible"
+    @update:drawer-visible="cartDrawerVisible = false"
+  />
 </template>
 
 <script setup>
 import { ref, reactive } from "vue";
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/store/users";
+import { useCartStore } from "@/store/carts";
 import { UserFilled } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { LoginAPI, RegisterAPI } from "@/api/user";
 import { showMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
+import { ShoppingCart } from "@element-plus/icons-vue";
+import CartDrawer from "@/components/cart-drawer.vue";
+import clearStorage from "@/utils/clear";
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
+const cartStore = useCartStore();
+const { cartGoodsNum } = storeToRefs(cartStore);
+const cartDrawerVisible = ref(false);
 const router = useRouter();
 const loginDialogVisible = ref(false);
 const registerDialogVisible = ref(false);
@@ -150,9 +170,13 @@ const loginSubmitForm = async (formEl) => {
     }
     LoginAPI(loginForm)
       .then((res) => {
-        userStore.setUser(res.data);
-        showMessage("登录成功");
-        loginDialogVisible.value = false;
+        if (res.code === 200) {
+          userStore.setUser(res.data);
+          showMessage("登录成功");
+          loginDialogVisible.value = false;
+        } else {
+          showMessage(res.msg, "error");
+        }
       })
       .catch((error) => {
         showMessage(error, "error");
@@ -161,7 +185,7 @@ const loginSubmitForm = async (formEl) => {
 };
 
 const logout = () => {
-  userStore.setUser(null);
+  clearStorage();
   router.push("/");
   showMessage("退出登录成功");
 };

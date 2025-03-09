@@ -25,9 +25,9 @@
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
-          :on-remove="handleRemove"
-        >
-          <img class="w-[100px] h-[100px]" v-if="imageUrl" :src="imageUrl" />
+            :on-remove="handleRemove"
+          >
+            <img class="w-[100px] h-[100px]" v-if="imageUrl" :src="imageUrl" />
             <el-icon v-else class="avatar-uploader-icon"
               ><i class="el-icon-plus"></i></el-icon
           ></el-upload>
@@ -50,7 +50,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/store/users";
 import { storeToRefs } from "pinia";
 import { UpdateUserAPI } from "@/api/user";
 import { useRouter } from "vue-router";

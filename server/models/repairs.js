@@ -35,9 +35,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    type: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    type_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'repair_type',
+        key: 'id'
+      }
     },
     description: {
       type: DataTypes.TEXT,
@@ -74,6 +78,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "user_id" },
+        ]
+      },
+      {
+        name: "type_id",
+        using: "BTREE",
+        fields: [
+          { name: "type_id" },
         ]
       },
       {

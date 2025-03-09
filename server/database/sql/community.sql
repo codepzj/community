@@ -20,16 +20,25 @@ CREATE TABLE users (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 费用缴纳表 (payments)
-CREATE TABLE payments (
+-- 报修类型表
+CREATE TABLE repair_type (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,                  -- 关联用户
-    amount DECIMAL(10,2) NOT NULL,         -- 缴费金额
-    status ENUM('pending', 'paid') DEFAULT 'pending', -- 状态
-    due_date DATE NOT NULL,                -- 缴费截止日期
-    paidAt TIMESTAMP NULL,                 -- 实际缴费时间
+    name VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 商品表 (goods)
+CREATE TABLE goods (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    description TEXT NULL,
+    image VARCHAR(255) NULL,
+    type_id INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (type_id) REFERENCES repair_type(id) ON DELETE CASCADE
 );
 
 -- 报修表 (repairs)
@@ -41,28 +50,46 @@ CREATE TABLE repairs (
     region VARCHAR(50) NOT NULL,            -- 地址
     address VARCHAR(255) NOT NULL,          -- 详细地址
     report_date DATE NOT NULL,              -- 申报时间
-    type VARCHAR(255) NOT NULL,             -- 报修类型
+    type_id INT NOT NULL,                   -- 报修类型
     description TEXT NULL,          -- 报修内容
     status ENUM("in_pay", "pending", "in_progress", "completed") DEFAULT "in_pay", -- 报修状态
     assigned_worker INT NULL,               -- 维修人员（工作人员 ID）
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (type_id) REFERENCES repair_type(id) ON DELETE CASCADE,
     FOREIGN KEY (assigned_worker) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- 购物车表 (carts)
+CREATE TABLE carts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    cart_id VARCHAR(255) NOT NULL,  -- 购物车ID
+    user_id INT NOT NULL,
+    goods_id INT NOT NULL,
+    goods_num INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (goods_id) REFERENCES goods(id) ON DELETE CASCADE
 );
 
 -- 订单表 (orders)
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    repair_id INT NOT NULL,                  -- 关联报修工单
-    amount DECIMAL(10,2) NULL,               -- 订单金额
-    payment_method ENUM('cash', 'wechat', 'alipay', 'card') NULL, -- 支付方式
-    status ENUM('pending', 'paid', 'completed', 'cancelled') DEFAULT 'pending', -- 订单状态
-    paid_at TIMESTAMP NULL,                  -- 支付时间
-    completed_at TIMESTAMP NULL,             -- 订单完成时间
+    order_id VARCHAR(255) NOT NULL,  -- 订单ID
+    repair_id INT NULL,
+    cart_id INT NULL,
+    order_type ENUM("repair", "goods", "repair_goods") NOT NULL,
+    order_amount DECIMAL(10,2) NOT NULL,
+    order_status ENUM("pending", "paid", "completed", "cancelled") DEFAULT "pending",
+    order_payment_method ENUM("cash", "wechat", "alipay", "card") NULL,
+    order_payment_time TIMESTAMP NULL,
+    order_completed_time TIMESTAMP NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE
+    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
+    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE
 );
 
 -- 论坛帖子表 (posts)
@@ -93,3 +120,10 @@ CREATE TABLE settings (
     key_name VARCHAR(100) UNIQUE NOT NULL, -- 设置项名称
     value TEXT NOT NULL                    -- 设置值
 );
+
+-- 初始化数据
+INSERT INTO repair_type (name) VALUES 
+('家用电器'),
+('水电设施'),
+('门窗设备'),
+('网络设备');

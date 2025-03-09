@@ -53,16 +53,10 @@ const routes = [
         ],
       },
       {
-        path: "test",
-        component: () => import("@/views/test/index.vue"),
-        children: [
-          {
-            path: "payment",
-            component: () => import("@/views/order/payment/index.vue"),
-            name: "OrderPayment",
-          },
-        ],
-      },
+        path: "goods",
+        component: () => import("@/views/goods/index.vue"),
+        name: "GoodsList",
+      }
     ],
   },
   {

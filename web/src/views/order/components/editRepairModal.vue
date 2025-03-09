@@ -18,13 +18,16 @@
       <el-form-item label="详细地址" prop="address">
         <el-input v-model="form.address" />
       </el-form-item>
-      <el-form-item label="报修类型" prop="type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox value="水管漏水">水管漏水</el-checkbox>
-          <el-checkbox value="电路故障">电路故障</el-checkbox>
-          <el-checkbox value="下水道堵塞">下水道堵塞</el-checkbox>
-          <el-checkbox value="网线故障">网线故障</el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="报修类型" prop="type_id">
+        <el-radio-group v-model="form.type_id">
+          <el-radio
+            v-for="item in repairTypeList"
+            :key="item.id"
+            :value="item.id"
+          >
+            {{ item.name }}
+          </el-radio>
+        </el-radio-group>
       </el-form-item>
       <el-form-item label="描述" prop="description">
         <el-input v-model="form.description" type="textarea" :rows="4" />
@@ -39,15 +42,17 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits, reactive, watch } from "vue";
+import { ref, computed, defineProps, defineEmits, reactive, watch, onMounted } from "vue";
 import { updateRepair } from "@/api/repair";
 import { showMessage } from "@/utils/message";
+import { getRepairType } from "@/api/repair_type";
 const props = defineProps({
   visible: Boolean,
   data: Object,
 });
 const emit = defineEmits(["update:visible", "update:row"]);
 
+const repairTypeList = ref([]);
 const visibleModel = computed({
   get: () => props.visible,
   set: (value) => emit("update:visible", value),
@@ -60,7 +65,7 @@ const form = reactive({
   phone: "",
   region: "",
   address: "",
-  type: [],
+  type_id: 0,
   description: "",
 });
 
@@ -68,16 +73,7 @@ watch(
   () => props.data,
   (newData) => {
     if (newData) {
-      console.log(newData);
-      Object.assign(form, {
-        id: newData.id || 0,
-        name: newData.name || "",
-        phone: newData.phone || "",
-        region: newData.region || "",
-        address: newData.address || "",
-        type: Array.isArray(newData.type) ? newData.type : [],
-        description: newData.description || "",
-      });
+      Object.assign(form, newData);
     }
   },
   { deep: true, immediate: true }
@@ -87,18 +83,11 @@ const handleClose = () => {
   visibleModel.value = false;
 };
 
-const convertFormToUpdateRepair = computed(() => {
-  return {
-    ...form,
-    type: form.type.join(","),
-  };
-});
-
 const handleSubmit = async () => {
   formRef.value.validate(async (valid) => {
     if (!valid) return;
     try {
-      const res = await updateRepair(convertFormToUpdateRepair.value);
+      const res = await updateRepair(form);
       console.log(res);
       emit("update:row", res.data);
       visibleModel.value = false;
@@ -114,6 +103,11 @@ const rules = {
   phone: [{ required: true, message: "请输入手机号", trigger: "blur" }],
   region: [{ required: true, message: "请选择地址", trigger: "change" }],
   address: [{ required: true, message: "请输入详细地址", trigger: "blur" }],
-  type: [{ required: true, message: "请选择报修类型", trigger: "change" }],
+  type_id: [{ required: true, message: "请选择报修类型", trigger: "change" }],
 };
+
+onMounted(async () => {
+  const res = await getRepairType();
+  repairTypeList.value = res.data;
+});
 </script>

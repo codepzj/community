@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/store/users";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { getRepairListByUserId } from "@/api/repair";

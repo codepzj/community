@@ -57,6 +57,16 @@ class RepairService {
       throw new Error(error.message);
     }
   }
+
+  // 根据id删除报修信息
+  async deleteRepairById(id) {
+    try {
+      const deleted = await RepairsModel.destroy({ where: { id } });
+      return deleted ? true : false;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 }
 
 module.exports = new RepairService();

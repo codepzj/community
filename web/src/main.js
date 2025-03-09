@@ -12,8 +12,8 @@ pinia.use(piniaPluginPersistedstate);
 
 // 创建 Vue 应用并注册路由和状态管理
 const app = createApp(App);
-app.use(router);
 app.use(pinia);
+app.use(router);
 
 // 挂载应用到 DOM
 app.mount("#app");

@@ -43,6 +43,20 @@ class RepairController {
       res.json(failOnServer(error.message));
     }
   }
+
+  async deleteRepairById(req, res) {
+    const { id } = req.params;
+    try {
+      const deleted = await repairService.deleteRepairById(id);
+      if (deleted) {
+        res.json(success("删除申报成功"));
+      } else {
+        res.json(failOnServer("删除申报失败"));
+      }
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
 }
 
 module.exports = new RepairController();

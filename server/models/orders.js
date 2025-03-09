@@ -23,10 +23,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.ENUM('cash','wechat','alipay','card'),
       allowNull: true
     },
-    payment_proof: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
     status: {
       type: DataTypes.ENUM('pending','paid','completed','cancelled'),
       allowNull: true,

@@ -39,13 +39,18 @@
             class="custom-datepicker"
           />
         </el-form-item>
-        <el-form-item label="报修类型" prop="type">
-          <el-checkbox-group v-model="form.type" class="custom-checkbox-group">
-            <el-checkbox value="水管漏水" name="type">水管漏水</el-checkbox>
-            <el-checkbox value="电路故障" name="type">电路故障</el-checkbox>
-            <el-checkbox value="下水道堵塞" name="type">下水道堵塞</el-checkbox>
-            <el-checkbox value="网线故障" name="type">网线故障</el-checkbox>
-          </el-checkbox-group>
+        <el-form-item label="报修类型" prop="type_id">
+          <el-radio-group
+            v-model="form.type_id"
+            class="custom-checkbox-group"
+          >
+            <el-radio
+              v-for="item in repairTypeList"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
+            />
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="报修描述" prop="description">
           <el-input
@@ -69,13 +74,18 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import { showMessage } from "@/utils/message";
 import { createRepair } from "@/api/repair";
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/store/users";
+import { getRepairType } from "@/api/repair_type";
 import GoBack from "@/components/goback.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const formRef = ref(null);
 const userStore = useUserStore();
+const repairTypeList = ref([]);
 const form = reactive({
   user_id: userStore.user.id,
   name: "",
@@ -83,16 +93,9 @@ const form = reactive({
   region: "",
   address: "",
   report_date: "",
-  type: [],
+  type_id: 0,
   description: "",
 });
-
-const formConvert = (form) => {
-  return {
-    ...form,
-    type: form.type.join(","),
-  };
-};
 
 const validatePhone = (rule, value, callback) => {
   if (!value) {
@@ -113,14 +116,13 @@ const rules = {
     { required: true, message: "请输入电话", trigger: "blur" },
     { validator: validatePhone, trigger: "blur" },
   ],
-  region: [{ required: true, message: "请选择地址", trigger: "blur" }],
+  region: [{ required: true, message: "请选择地址", trigger: "change" }],
   address: [{ required: true, message: "请输入详细地址", trigger: "blur" }],
   report_date: [
     { type: "date", required: true, message: "请选择日期", trigger: "change" },
   ],
-  type: [
+  type_id: [
     {
-      type: "array",
       required: true,
       message: "请选择报修类型",
       trigger: "change",
@@ -133,8 +135,9 @@ const onSubmit = async (formEl) => {
 
   await formEl.validate(async (valid) => {
     if (valid) {
-      const res = await createRepair(formConvert(form));
+      const res = await createRepair(form);
       showMessage(res.msg);
+      router.push({ name: "OrderList" });
     } else {
       showMessage("请确保所有必填项都已填写", "error");
     }
@@ -145,6 +148,10 @@ const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
+onMounted(async () => {
+  const res = await getRepairType();
+  repairTypeList.value = res.data;
+});
 </script>
 
 <style scoped>

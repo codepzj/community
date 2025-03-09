@@ -5,7 +5,8 @@ const cors = require("cors");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const repairsRouter = require("./routes/repairs");
-
+const goodsRouter = require("./routes/goods");
+const repairTypeRouter = require("./routes/repair_type");
 // 解析请求体
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +21,8 @@ app.use(express.static("public"));
 app.use("/", indexRouter);
 app.use("/user", usersRouter);
 app.use("/repair", repairsRouter);
+app.use("/goods", goodsRouter);
+app.use("/repair_type", repairTypeRouter);
 
 // 路由未匹配
 app.use("*", (req, res) => {

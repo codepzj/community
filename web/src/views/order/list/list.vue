@@ -7,13 +7,7 @@
       <el-table-column prop="address" label="地址" width="180" />
       <el-table-column prop="type" label="报修类型">
         <template #default="scope">
-          <span
-            v-for="item in scope.row.type.split(',')"
-            :key="item"
-            class="mr-2"
-          >
-            <el-tag>{{ item }}</el-tag>
-          </span>
+          <el-tag>{{ getRepairNameById(scope.row.type_id) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述" />
@@ -27,10 +21,16 @@
           <el-button type="primary" @click="handlePay(scope.row)"
             >立即支付</el-button
           >
-          <el-button type="primary" @click="handleEdit(scope.row)" :disabled="scope.row.status !== 'in_pay'"
+          <el-button
+            type="primary"
+            @click="handleEdit(scope.row)"
+            :disabled="scope.row.status !== 'in_pay'"
             >编辑</el-button
           >
-          <el-button type="danger" @click="handleDelete(scope.row)" :disabled="scope.row.status !== 'in_pay'"
+          <el-button
+            type="danger"
+            @click="handleDelete(scope.row)"
+            :disabled="scope.row.status !== 'in_pay'"
             >删除</el-button
           >
         </template>
@@ -48,35 +48,51 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/store/users";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { getRepairListInPayByUserId } from "@/api/repair";
 import GoBack from "@/components/goback.vue";
 import EditRepairModal from "../components/editRepairModal.vue";
+import { getRepairType } from "@/api/repair_type";
+import { deleteRepair } from "@/api/repair";
+import { showMessage } from "@/utils/message";
+
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const tableData = ref([]);
 const editRepairModalVisible = ref(false);
 const editRepairModalData = ref(null);
-
-onMounted(() => {
-  getRepairList();
+const repairTypeList = ref([]);
+onMounted(async () => {
+  const res = await getRepairType();
+  repairTypeList.value = res.data;
+  await getRepairList();
 });
+
+const getRepairNameById = (id) => {
+  const repairType = repairTypeList.value.find((item) => item.id === id);
+  return repairType ? repairType.name : "";
+};
 
 // 处理编辑
 const handleEdit = (row) => {
-  editRepairModalData.value = {
-    ...row,
-    type: row.type ? row.type.split(",") : [], // 确保 type 是数组
-  };
   editRepairModalVisible.value = true;
+  editRepairModalData.value = row;
 };
 
 // 处理删除
-const handleDelete = (row) => {
-  console.log("删除订单：", row);
+const handleDelete = async (row) => {
+  try {
+    const res = await deleteRepair(row.id);
+    if (res.code === 200) {
+      showMessage("删除成功");
+      await getRepairList();
+    }
+  } catch (error) {
+    showMessage("删除失败", "error");
+  }
 };
 
 // 获取报修订单列表

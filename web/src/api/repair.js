@@ -30,3 +30,9 @@ export const getRepairListInPayByUserId = (userId) => {
   });
 };
 
+export const deleteRepair = (id) => {
+  return request({
+    url: `/repair/delete/${id}`,
+    method: "delete",
+  });
+};
