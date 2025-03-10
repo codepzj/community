@@ -10,6 +10,19 @@ class RepairTypeService {
       order: [["createdAt", "ASC"]],
     });
   }
+
+  async updateRepairType(id, repairType) {
+    return await RepairTypeModel.update(repairType, {
+      where: { id },
+    });
+  }
+
+  async deleteRepairType(id) {
+    return await RepairTypeModel.destroy({
+      where: { id },
+    });
+  }
+  
 }
 
 module.exports = new RepairTypeService();

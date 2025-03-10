@@ -6,3 +6,13 @@ export interface RepairTypeVO {
   updatedAt: string;
 }
 
+export interface AddRepairTypeReq {
+  name: string;
+  price: number;
+}
+
+export interface UpdateRepairTypeReq {
+  id?: number;
+  name: string;
+  price: number;
+}
