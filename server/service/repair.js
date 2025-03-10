@@ -6,7 +6,7 @@ class RepairService {
     // 更新报修表状态为待支付
     const formattedRepair = {
       ...rest,
-      status: "in_pay",
+      status: "pending",
     };
     try {
       return await RepairsModel.create(formattedRepair);
@@ -15,6 +15,14 @@ class RepairService {
     }
   }
 
+  // 获取所有申报
+  async findAllRepairByUserId(user_id) {
+    try {
+      return await RepairsModel.findAll({ where: { user_id } });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
   // 更新保修表信息
   async updateRepair(repair) {
     try {
@@ -47,11 +55,11 @@ class RepairService {
     }
   }
 
-  // 根据用户id查询所有待支付报修信息
-  async findRepairInPayByUserId(user_id) {
+  // 根据用户id查询所有待审核报修信息
+  async findRepairPendingByUserId(user_id) {
     try {
       return await RepairsModel.findAll({
-        where: { user_id, status: "in_pay" },
+        where: { user_id, status: "pending" },
       });
     } catch (error) {
       throw new Error(error.message);

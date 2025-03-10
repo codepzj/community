@@ -23,7 +23,7 @@
         <!-- 商品信息 -->
         <div class="ml-4 flex-1">
           <p class="text-lg font-medium">{{ item.name }}</p>
-          <p class="text-sm text-gray-500">{{ item.price }}</p>
+          <p class="text-sm text-gray-500">￥{{ item.price }}</p>
           <div class="flex items-center mt-2 space-x-2">
             <el-input-number
               v-model="item.num"
@@ -38,7 +38,9 @@
           </div>
         </div>
       </div>
-      <div class="absolute w-full bottom-0 p-6">
+
+      <!-- 底部操作栏 -->
+      <div class="absolute w-full bottom-0 p-6 bg-white shadow-md">
         <div class="flex justify-between space-x-4">
           <div class="flex items-center">
             <p class="text-lg font-bold text-gray-800">总价：</p>
@@ -51,14 +53,18 @@
               type="danger"
               @click="handleClearCart"
               class="transition duration-200 hover:bg-red-600 hover:text-white"
-              >清空购物车</el-button
             >
+              清空购物车
+            </el-button>
             <el-button
               type="success"
+              :loading="loading"
+              :disabled="loading"
               @click="handlePay"
               class="transition duration-200 hover:bg-green-600 hover:text-white"
-              >去支付</el-button
             >
+              {{ loading ? "处理中..." : "去支付" }}
+            </el-button>
           </div>
         </div>
       </div>
@@ -78,6 +84,7 @@ import { storeToRefs } from "pinia";
 import { showMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { addCart } from "@/api/cart";
+
 const props = defineProps({
   drawerVisible: {
     type: Boolean,
@@ -93,6 +100,7 @@ const { cart } = storeToRefs(cartStore);
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const direction = ref("rtl");
+const loading = ref(false); // 添加加载状态
 
 const totalPrice = computed(() => {
   return cart.value
@@ -114,24 +122,25 @@ const handleClearCart = () => {
 };
 
 const handlePay = async () => {
+  if (loading.value) return;
+  loading.value = true;
+
   const cartList = cart.value.map((item) => ({
     user_id: user.value.id,
     goods_id: item.id,
     goods_num: item.num,
   }));
+
   try {
-    const res = await addCart({
-      cartList,
-    });
+    const res = await addCart({ cartList });
     if (res.code === 200) {
       if (res.data.length > 0) {
+        cartStore.clearCart();
         emit("update:drawerVisible", false);
-        setTimeout(() => {
-          router.push({
-          name: "OrderPayment",
-            params: { cart_id: res.data[0].cart_id },
-          });
-        }, 1000);
+        router.push({
+          name: "ShoppingPayment",
+          params: { cart_id: res.data[0].cart_id },
+        });
       } else {
         showMessage("购物车空空如也，快去选购吧！");
       }
@@ -140,6 +149,9 @@ const handlePay = async () => {
     }
   } catch (error) {
     console.log(error);
+    showMessage("支付请求失败，请稍后重试");
+  } finally {
+    loading.value = false;
   }
 };
 </script>

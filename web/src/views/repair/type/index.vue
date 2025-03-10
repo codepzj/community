@@ -40,10 +40,7 @@
           />
         </el-form-item>
         <el-form-item label="报修类型" prop="type_id">
-          <el-radio-group
-            v-model="form.type_id"
-            class="custom-checkbox-group"
-          >
+          <el-radio-group v-model="form.type_id" class="custom-checkbox-group">
             <el-radio
               v-for="item in repairTypeList"
               :key="item.id"
@@ -137,7 +134,7 @@ const onSubmit = async (formEl) => {
     if (valid) {
       const res = await createRepair(form);
       showMessage(res.msg);
-      router.push({ name: "OrderList" });
+      router.push({ name: "RepairList", query: { type: "repair" } });
     } else {
       showMessage("请确保所有必填项都已填写", "error");
     }

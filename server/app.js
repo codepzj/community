@@ -8,6 +8,8 @@ const repairsRouter = require("./routes/repairs");
 const goodsRouter = require("./routes/goods");
 const repairTypeRouter = require("./routes/repair_type");
 const cartsRouter = require("./routes/carts");
+const ordersRouter = require("./routes/orders");
+const announcementsRouter = require("./routes/announcements");
 // 解析请求体
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,6 +27,9 @@ app.use("/repair", repairsRouter);
 app.use("/goods", goodsRouter);
 app.use("/repair_type", repairTypeRouter);
 app.use("/cart", cartsRouter);
+app.use("/order", ordersRouter);
+app.use("/announcement", announcementsRouter);
+
 // 路由未匹配
 app.use("*", (req, res) => {
   res.status(404).json({ code: 404, msg: "路由未匹配" });

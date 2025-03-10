@@ -14,6 +14,16 @@ class RepairController {
     }
   }
 
+  async findAllRepairByUserId(req, res) {
+    try {
+      const { user_id } = req.params;
+      const repair = await repairService.findAllRepairByUserId(user_id);
+      res.json(success("获取所有申报成功", repair));
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
+
   async updateRepair(req, res) {
     const repair = req.body;
     try {
@@ -34,11 +44,11 @@ class RepairController {
     }
   }
 
-  async getRepairInPayByUserId(req, res) {
+  async getRepairPendingByUserId(req, res) {
     const { user_id } = req.params;
     try {
-      const repair = await repairService.findRepairInPayByUserId(user_id);
-      res.json(success("获取待支付申报成功", repair));
+      const repair = await repairService.findRepairPendingByUserId(user_id);
+      res.json(success("获取待审核申报成功", repair));
     } catch (error) {
       res.json(failOnServer(error.message));
     }

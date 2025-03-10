@@ -12,7 +12,7 @@
           alt="Element logo"
         />
       </el-menu-item>
-      <el-menu-item @click="router.push('/goods')"> 器具购买 </el-menu-item>
+      <el-menu-item @click="router.push('/goods')"> 物资采购 </el-menu-item>
     </div>
     <div class="flex items-center justify-center">
       <el-badge :value="cartGoodsNum">
@@ -44,10 +44,6 @@
             >编辑用户信息</el-menu-item
           >
           <el-menu-item index="2-2" @click="logout">退出登录</el-menu-item>
-          <el-menu-item index="2-3">订单申报</el-menu-item>
-          <el-menu-item index="2-3">订单申报</el-menu-item>
-          <el-menu-item index="2-4">订单查询</el-menu-item>
-          <el-menu-item index="2-4">订单管理</el-menu-item>
         </el-menu>
       </el-sub-menu>
     </div>
@@ -214,4 +210,5 @@ const logout = () => {
 :deep(.el-button + .el-button) {
   margin-left: 10px;
 }
+
 </style>

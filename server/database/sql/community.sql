@@ -52,7 +52,7 @@ CREATE TABLE repairs (
     report_date DATE NOT NULL,              -- 申报时间
     type_id INT NOT NULL,                   -- 报修类型
     description TEXT NULL,          -- 报修内容
-    status ENUM("in_pay", "pending", "in_progress", "completed") DEFAULT "in_pay", -- 报修状态
+    status ENUM("pending", "in_progress", "completed") DEFAULT "pending", -- 报修状态
     assigned_worker INT NULL,               -- 维修人员（工作人员 ID）
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -78,18 +78,13 @@ CREATE TABLE carts (
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
     order_id VARCHAR(255) NOT NULL,  -- 订单ID
-    repair_id INT NULL,
-    cart_id INT NULL,
-    order_type ENUM("repair", "goods", "repair_goods") NOT NULL,
-    order_amount DECIMAL(10,2) NOT NULL,
-    order_status ENUM("pending", "paid", "completed", "cancelled") DEFAULT "pending",
-    order_payment_method ENUM("cash", "wechat", "alipay", "card") NULL,
-    order_payment_time TIMESTAMP NULL,
-    order_completed_time TIMESTAMP NULL,
+    user_id INT NOT NULL,           -- 用户ID
+    cart_id VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    order_status ENUM("pending", "paid") DEFAULT "pending",
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (repair_id) REFERENCES repairs(id) ON DELETE CASCADE,
-    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- 论坛帖子表 (posts)
@@ -114,11 +109,13 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 系统设置表 (settings)
-CREATE TABLE settings (
+-- 系统公告表 (announcements)
+CREATE TABLE announcements (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    key_name VARCHAR(100) UNIQUE NOT NULL, -- 设置项名称
-    value TEXT NOT NULL                    -- 设置值
+    title VARCHAR(255) NOT NULL,    -- 公告标题
+    content TEXT NOT NULL,          -- 公告内容
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- 初始化数据

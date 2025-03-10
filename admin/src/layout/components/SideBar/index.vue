@@ -47,9 +47,9 @@ const items: ItemType[] = reactive([
     getItem("用户列表", "UserList", null),
     getItem("用户角色", "UserRole", null),
   ]),
-  getItem("内容管理", "Content", () => h(AppstoreOutlined), [
-    getItem("发布文章", "PublishArticle", null),
-    getItem("文章列表", "ArticleList", null),
+  getItem("公告管理", "Content", () => h(AppstoreOutlined), [
+    getItem("发布公告", "PublishArticle", null),
+    getItem("公告列表", "ArticleList", null),
     getItem("草稿箱", "Draft", null),
     getItem("素材库", "MaterialLibrary", null),
     getItem("回收站", "RecycleBin", null),

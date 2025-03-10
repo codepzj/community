@@ -18,6 +18,15 @@ class GoodsController {
       res.json(failOnServer(error.message));
     }
   }
+
+  async getGoodsById(req, res) {
+    try {
+      const goods = await goodsService.getGoodsById(req.params.id);
+      res.json(success("获取商品成功", goods));
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
 }
 
 module.exports = new GoodsController();

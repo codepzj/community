@@ -1,33 +1,27 @@
-import type {
-  PostsReq,
-  PostsUpdateStatusReq,
-  PostsVO,
-} from "@/api/interfaces/posts";
-import type { PageResponse, Response } from "@/api/interfaces/resp";
+import type { PostsReq, PostsVO } from "@/api/interfaces/posts";
+import type { Response } from "@/api/interfaces/resp";
 import request from "@/utils/request";
 export const createPost: (data: PostsReq) => Promise<Response<any>> = (
   data
 ) => {
   console.log("data", data);
-  return request.post("/posts/create", data);
+  return request.post("/announcement/create", data);
 };
 
-// 分页获取文章列表
-export const getPostsByPage: (
-  pageNo?: number,
-  pageSize?: number
-) => Promise<PageResponse<PostsVO>> = (page_no = 1, size = 10) => {
-  return request.get("/posts/list", { params: { page_no, size } });
+// 获取公告列表
+export const getAllPosts: () => Promise<Response<PostsVO[]>> = () => {
+  return request.get("/announcement/findAll");
 };
 
 // 更新文章状态
-export const updatePostStatus: (
-  data: PostsUpdateStatusReq
-) => Promise<PageResponse<any>> = (data) => {
-  return request.put("/posts/update/status", data);
+export const updatePostById: (
+  id: number,
+  data: PostsReq
+) => Promise<Response<any>> = (id, data) => {
+  return request.put(`/announcement/update/${id}`, data);
 };
 
-// 软删除文章
-export const deletePostSoft: (id: string) => Promise<Response<any>> = (id) => {
-  return request.delete(`/posts/soft-delete/${id}`);
+// 删除文章
+export const deletePostById: (id: number) => Promise<Response<any>> = (id) => {
+  return request.delete(`/announcement/delete/${id}`);
 };

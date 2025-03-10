@@ -48,9 +48,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     status: {
-      type: DataTypes.ENUM('in_pay','pending','in_progress','completed'),
+      type: DataTypes.ENUM('pending','in_progress','completed'),
       allowNull: true,
-      defaultValue: "in_pay"
+      defaultValue: "pending"
     },
     assigned_worker: {
       type: DataTypes.INTEGER,

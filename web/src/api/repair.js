@@ -23,9 +23,9 @@ export const getRepairListByUserId = (userId) => {
   });
 };
 
-export const getRepairListInPayByUserId = (userId) => {
+export const getRepairListPendingByUserId = (userId) => {
   return request({
-    url: `/repair/list/${userId}/in_pay`,
+    url: `/repair/list/${userId}/pending`,
     method: "get",
   });
 };

@@ -41,22 +41,27 @@ const routes = [
         component: () => import("@/views/order/index.vue"),
         children: [
           {
-            path: "",
-            component: () => import("@/views/order/list/list.vue"),
-            name: "OrderList",
+            path: "repair",
+            component: () => import("@/views/order/list/repair/list.vue"),
+            name: "RepairList",
           },
           {
-            path: "payment/:cart_id",
-            component: () => import("@/views/order/payment/index.vue"),
-            name: "OrderPayment",
+            path: "shopping",
+            component: () => import("@/views/order/list/shop/list.vue"),
+            name: "ShoppingList",
           },
         ],
+      },
+      {
+        path: "payment/:cart_id",
+        component: () => import("@/views/payment/index.vue"),
+        name: "ShoppingPayment",
       },
       {
         path: "goods",
         component: () => import("@/views/goods/index.vue"),
         name: "GoodsList",
-      }
+      },
     ],
   },
   {

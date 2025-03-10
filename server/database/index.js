@@ -34,5 +34,10 @@ db.RepairsModel = require("../models/repairs")(sequelize, Sequelize.DataTypes);
 db.GoodsModel = require("../models/goods")(sequelize, Sequelize.DataTypes);
 db.RepairTypeModel = require("../models/repair_type")(sequelize, Sequelize.DataTypes);
 db.CartsModel = require("../models/carts")(sequelize, Sequelize.DataTypes);
+db.OrdersModel = require("../models/orders")(sequelize, Sequelize.DataTypes);
+db.AnnouncementsModel = require("../models/announcements")(
+  sequelize,
+  Sequelize.DataTypes
+);
 
 module.exports = db;

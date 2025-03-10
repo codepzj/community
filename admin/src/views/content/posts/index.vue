@@ -8,8 +8,6 @@
       class="w-2/5"
     />
     <div class="flex items-center gap-2">
-      <a-button type="dashed">保存</a-button>
-      <a-button type="dashed">设置</a-button>
       <a-button type="primary" @click="handleCreatePost">发布</a-button>
     </div>
   </div>
@@ -39,49 +37,11 @@
       <a-form-item label="标题" name="title">
         <a-input v-model:value="configForm.title" placeholder="请输入标题" />
       </a-form-item>
-      <a-form-item label="作者" name="author">
-        <a-input v-model:value="configForm.author" placeholder="请输入作者" />
-      </a-form-item>
       <a-form-item label="内容" name="content">
         <a-textarea
           v-model:value="configForm.content"
           placeholder="请输入内容"
         />
-      </a-form-item>
-      <a-form-item label="简介" name="description">
-        <a-input
-          v-model:value="configForm.description"
-          placeholder="请输入简介"
-        />
-      </a-form-item>
-      <a-form-item label="分类" name="category">
-        <a-select
-          v-model:value="configForm.category"
-          style="width: 100%"
-          placeholder="请选择分类"
-          :options="options.category"
-        ></a-select>
-      </a-form-item>
-      <a-form-item label="标签" name="tags">
-        <a-select
-          v-model:value="configForm.tags"
-          mode="multiple"
-          style="width: 100%"
-          placeholder="请选择标签"
-          :options="options.tags"
-        ></a-select>
-      </a-form-item>
-      <a-form-item label="封面" name="cover">
-        <a-input v-model:value="configForm.cover" placeholder="请输入封面" />
-      </a-form-item>
-      <a-form-item label="操作">
-        <a-space>
-          <span>置顶</span>
-          <a-switch v-model:checked="configForm.isTop" />
-          <a-divider type="vertical" />
-          <span>发布</span>
-          <a-switch v-model:checked="configForm.isPublish" />
-        </a-space>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -107,30 +67,8 @@ const key = "submit-post";
 const configForm = reactive({
   title: "",
   content: "",
-  author: "codepzj",
-  description: "",
-  category: "",
-  tags: [],
-  cover: "",
-  isTop: false,
-  isPublish: true,
 });
-const options = reactive({
-  category: [
-    { value: "技术", label: "技术" },
-    { value: "生活", label: "生活" },
-    { value: "学习", label: "学习" },
-    { value: "其他", label: "其他" },
-  ],
-  tags: [
-    { value: "golang", label: "Golang" },
-    { value: "javascript", label: "JavaScript" },
-    { value: "typescript", label: "TypeScript" },
-    { value: "python", label: "Python" },
-    { value: "java", label: "Java" },
-    { value: "csharp", label: "C#" },
-  ],
-});
+
 const handleCreatePost = async () => {
   open.value = true;
 };
@@ -173,10 +111,6 @@ const handleOk = async () => {
 const rules: Record<string, Rule[]> = {
   title: [{ required: true, message: "请输入标题" }],
   content: [{ required: true, message: "请输入内容" }],
-  author: [{ required: true, message: "请输入作者" }],
-  description: [{ required: true, message: "请输入简介" }],
-  category: [{ required: true, message: "请选择分类" }],
-  tags: [{ required: true, message: "请选择标签" }],
 };
 </script>
 <style lang="scss">

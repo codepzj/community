@@ -1,10 +1,10 @@
 <template>
-  <div class="p-4">
+  <div class="p-4" v-if="tableData.length > 0">
     <el-table
       v-if="tableData.length"
       :data="tableData"
       border
-      size="large"
+      size="small"
       style="width: 100%"
     >
       <el-table-column prop="name" label="姓名" width="180" />
@@ -63,49 +63,12 @@
     />
 
     <!-- 进度模态框 -->
-    <el-dialog v-model="stepDialogVisible" title="报修进度" width="600px" :before-close="handleCloseDialog">
+    <el-dialog v-model="stepDialogVisible" title="报修进度" width="600px">
       <el-steps :active="getStepIndex(currentRow?.status)" finish-status="success" align-center>
         <el-step title="待审核" description="您的报修已提交，等待审核。" />
         <el-step title="处理中" description="您的报修正在处理中。" />
         <el-step title="已完成" description="报修已完成，感谢您的耐心等待。" />
       </el-steps>
-    </el-dialog>
-
-    <!-- 编辑报修模态框 -->
-    <el-dialog :visible.sync="editRepairModalVisible" title="编辑报修订单" width="500px">
-      <el-form :model="editRepairModalData" label-width="80px">
-        <el-form-item label="姓名" :rules="[{ required: true, message: '请输入姓名', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.name" placeholder="请输入姓名" />
-        </el-form-item>
-        <el-form-item label="手机号" :rules="[{ required: true, message: '请输入手机号', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.phone" placeholder="请输入手机号" />
-        </el-form-item>
-        <el-form-item label="地址" :rules="[{ required: true, message: '请输入地址', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.address" placeholder="请输入地址" />
-        </el-form-item>
-        <el-form-item label="报修类型" :rules="[{ required: true, message: '请选择报修类型', trigger: 'blur' }]">
-          <el-select v-model="editRepairModalData.type_id" placeholder="请选择报修类型">
-            <el-option
-              v-for="item in repairTypeList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input
-            type="textarea"
-            v-model="editRepairModalData.description"
-            placeholder="请输入报修描述"
-            rows="4"
-          />
-        </el-form-item>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="editRepairModalVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleSave">保 存</el-button>
-        </div>
-      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -218,11 +181,6 @@ const refreshTable = (row) => {
     tableData.value[index] = row;
   }
 };
-
-// 关闭进度模态框时重置状态
-const handleCloseDialog = () => {
-  currentRow.value = null;
-};
 </script>
 
 <style scoped>
@@ -231,31 +189,5 @@ const handleCloseDialog = () => {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-}
-
-.el-dialog {
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.el-form-item {
-  margin-bottom: 20px;
-}
-
-.el-button {
-  border-radius: 4px;
-}
-
-.el-steps {
-  margin-top: 20px;
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.el-select {
-  width: 100%;
 }
 </style>
