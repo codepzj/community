@@ -12,7 +12,9 @@ class GoodsService {
 
   async getGoods() {
     try {
-      const goods = await GoodsModel.findAll();
+      const goods = await GoodsModel.findAll({
+        order: [["createdAt", "DESC"]],
+      });
       return goods;
     } catch (error) {
       throw new Error(error.message);

@@ -3,7 +3,16 @@ const { AnnouncementsModel } = require("../database/index");
 class AnnouncementsService {
   async findAllAnnouncements() {
     try {
-      return await AnnouncementsModel.findAll();
+      return await AnnouncementsModel.findAll({
+        order: [["createdAt", "DESC"]],
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  async findAnnouncementById(id) {
+    try {
+      return await AnnouncementsModel.findByPk(id);
     } catch (error) {
       throw new Error(error);
     }
@@ -29,7 +38,9 @@ class AnnouncementsService {
 
   async deleteAnnouncement(announcementId) {
     try {
-      return await AnnouncementsModel.destroy({ where: { id: announcementId } });
+      return await AnnouncementsModel.destroy({
+        where: { id: announcementId },
+      });
     } catch (error) {
       throw new Error(error);
     }

@@ -49,7 +49,10 @@ class RepairService {
   // 根据用户id查询所有报修信息
   async findRepairByUserId(user_id) {
     try {
-      return await RepairsModel.findAll({ where: { user_id } });
+      return await RepairsModel.findAll({
+        where: { user_id },
+        order: [["createdAt", "DESC"]],
+      });
     } catch (error) {
       throw new Error(error.message);
     }

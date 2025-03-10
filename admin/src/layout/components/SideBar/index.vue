@@ -18,9 +18,6 @@ import {
   HomeOutlined,
   UserOutlined,
   AppstoreOutlined,
-  InteractionOutlined,
-  LineChartOutlined,
-  BellOutlined,
   SettingOutlined,
 } from "@ant-design/icons-vue";
 import type { ItemType } from "ant-design-vue";
@@ -44,29 +41,17 @@ function getItem(
 const items: ItemType[] = reactive([
   getItem("仪表盘", "Dashboard", () => h(HomeOutlined)),
   getItem("用户管理", "User", () => h(UserOutlined), [
+    getItem("居民列表", "ResidentList", null),
     getItem("用户列表", "UserList", null),
     getItem("用户角色", "UserRole", null),
   ]),
   getItem("公告管理", "Content", () => h(AppstoreOutlined), [
     getItem("发布公告", "PublishArticle", null),
     getItem("公告列表", "ArticleList", null),
-    getItem("草稿箱", "Draft", null),
-    getItem("素材库", "MaterialLibrary", null),
-    getItem("回收站", "RecycleBin", null),
   ]),
-  getItem("互动管理", "Interaction", () => h(InteractionOutlined), [
-    getItem("评论管理", "Comment", null),
-    getItem("点赞管理", "Like", null),
-    getItem("私信管理", "Message", null),
-  ]),
-  getItem("数据分析", "Data", () => h(LineChartOutlined), [
-    getItem("文章统计", "ArticleStatistics", null),
-    getItem("用户统计", "UserStatistics", null),
-    getItem("互动统计", "InteractionStatistics", null),
-  ]),
-  getItem("通知中心", "Notice", () => h(BellOutlined), [
-    getItem("系统通知", "SystemNotifications", null),
-    getItem("用户通知", "UserNotifications", null),
+  getItem("维修管理", "Repair", () => h(SettingOutlined), [
+    getItem("维修类型", "RepairType", null),
+    getItem("维修列表", "RepairList", null),
   ]),
   getItem("系统设置", "System", () => h(SettingOutlined), [
     getItem("系统设置", "SystemSettings", null),

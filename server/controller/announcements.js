@@ -11,6 +11,17 @@ class AnnouncementsController {
     }
   }
 
+  async findAnnouncementById(req, res) {
+    try {
+      const announcement = await announcementsService.findAnnouncementById(
+        req.params.id
+      );
+      res.json(success("获取公告成功", announcement));
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
+
   async createAnnouncement(req, res) {
     try {
       const announcement = await announcementsService.createAnnouncement(

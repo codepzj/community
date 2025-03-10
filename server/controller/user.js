@@ -56,6 +56,15 @@ class UserController {
     };
     res.json(success("上传成功", data));
   }
+
+  async findAllUsers(req, res) {
+    try {
+      const users = await userService.findAllUsers();
+      res.json(success("查询所有用户成功", users));
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
 }
 
 module.exports = new UserController();

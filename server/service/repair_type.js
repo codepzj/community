@@ -6,7 +6,9 @@ class RepairTypeService {
   }
 
   async getAllRepairType() {
-    return await RepairTypeModel.findAll();
+    return await RepairTypeModel.findAll({
+      order: [["createdAt", "ASC"]],
+    });
   }
 }
 

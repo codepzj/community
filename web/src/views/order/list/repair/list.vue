@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" v-if="tableData.length > 0">
+  <div class="p-4">
     <el-table
       v-if="tableData.length"
       :data="tableData"

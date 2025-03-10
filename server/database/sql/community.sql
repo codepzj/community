@@ -24,6 +24,7 @@ CREATE TABLE users (
 CREATE TABLE repair_type (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -87,28 +88,6 @@ CREATE TABLE orders (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 论坛帖子表 (posts)
-CREATE TABLE posts (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,           -- 发表人
-    title VARCHAR(255) NOT NULL,    -- 帖子标题
-    content TEXT NOT NULL,          -- 帖子内容
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 论坛评论表 (comments)
-CREATE TABLE comments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    post_id INT NOT NULL,           -- 关联帖子
-    user_id INT NOT NULL,           -- 评论人
-    content TEXT NOT NULL,          -- 评论内容
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
 -- 系统公告表 (announcements)
 CREATE TABLE announcements (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -119,8 +98,8 @@ CREATE TABLE announcements (
 );
 
 -- 初始化数据
-INSERT INTO repair_type (name) VALUES 
-('家用电器'),
-('水电设施'),
-('门窗设备'),
-('网络设备');
+INSERT INTO repair_type (name, price) VALUES 
+('家用电器', 100),
+('水电设施', 200),
+('门窗设备', 300),
+('网络设备', 400);

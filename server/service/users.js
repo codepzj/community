@@ -45,6 +45,24 @@ class UserService {
       throw new Error(error.message);
     }
   }
+
+  async findAllUsers() {
+    try {
+      return await UserModel.findAll({
+        order: [["createdAt", "DESC"]],
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteUserById(id) {
+    try {
+      return await UserModel.destroy({ where: { id } });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 }
 
 module.exports = new UserService();

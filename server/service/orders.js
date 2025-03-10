@@ -23,7 +23,10 @@ class OrdersService {
 
   async findAllOrder(user_id) {
     try {
-      return await OrdersModel.findAll({ where: { user_id } });
+      return await OrdersModel.findAll({
+        where: { user_id },
+        order: [["createdAt", "DESC"]],
+      });
     } catch (error) {
       throw new Error(error);
     }

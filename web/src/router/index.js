@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Layout from "@/layout/index.vue";
+
 const routes = [
   {
     path: "/",
@@ -61,6 +62,11 @@ const routes = [
         path: "goods",
         component: () => import("@/views/goods/index.vue"),
         name: "GoodsList",
+      },
+      {
+        path: "posts/:id",
+        component: () => import("@/views/home/posts.vue"),
+        name: "Posts",
       },
     ],
   },

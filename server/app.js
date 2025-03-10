@@ -10,6 +10,7 @@ const repairTypeRouter = require("./routes/repair_type");
 const cartsRouter = require("./routes/carts");
 const ordersRouter = require("./routes/orders");
 const announcementsRouter = require("./routes/announcements");
+const adminRouter = require("./routes/admin");
 // 解析请求体
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +30,7 @@ app.use("/repair_type", repairTypeRouter);
 app.use("/cart", cartsRouter);
 app.use("/order", ordersRouter);
 app.use("/announcement", announcementsRouter);
+app.use("/admin", adminRouter);
 
 // 路由未匹配
 app.use("*", (req, res) => {

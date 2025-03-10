@@ -1,3 +1,22 @@
+export interface ResidentVO {
+    id: number;
+    username: string;
+    password: string;
+    email: string;
+    avatar: string;
+    phone: string;
+    address: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ResidentReq {
+  id: number;
+  email: string;
+  phone: string;
+  address: string;
+}
+
 export interface User {
   id: string;
   username: string;
