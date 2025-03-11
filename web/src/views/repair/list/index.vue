@@ -7,9 +7,9 @@
       size="large"
       style="width: 100%"
     >
-      <el-table-column prop="name" label="姓名" width="180" />
-      <el-table-column prop="phone" label="手机号" width="180" />
-      <el-table-column prop="address" label="地址" width="180" />
+      <el-table-column prop="name" label="姓名" width="200" />
+      <el-table-column prop="phone" label="手机号" width="200" />
+      <el-table-column prop="address" label="地址" width="200" />
       <el-table-column prop="type" label="报修类型">
         <template #default="scope">
           <el-tag>{{ getRepairNameById(scope.row.type_id) }}</el-tag>
@@ -25,21 +25,27 @@
       </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-button type="primary" size="small" @click="handleShowStep(scope.row)">
+          <el-button
+            type="primary"
+            size="medium"
+            @click="handleShowStep(scope.row)"
+          >
             查看进度
           </el-button>
           <el-button
             type="primary"
-            size="small"
+            size="medium"
             @click="handleEdit(scope.row)"
             :disabled="scope.row.status !== 'pending'"
-          >编辑</el-button>
+            >编辑</el-button
+          >
           <el-button
             type="danger"
-            size="small"
+            size="medium"
             @click="handleDelete(scope.row)"
             :disabled="scope.row.status !== 'pending'"
-          >删除</el-button>
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -60,31 +66,77 @@
       :data="editRepairModalData"
       @update:visible="editRepairModalVisible = false"
       @update:row="refreshTable"
+      :size="'large'"
     />
 
     <!-- 进度模态框 -->
-    <el-dialog v-model="stepDialogVisible" title="报修进度" width="600px" :before-close="handleCloseDialog">
-      <el-steps :active="getStepIndex(currentRow?.status)" finish-status="success" align-center>
-        <el-step title="待审核" description="您的报修已提交，等待审核。" />
-        <el-step title="处理中" description="您的报修正在处理中。" />
-        <el-step title="已完成" description="报修已完成，感谢您的耐心等待。" />
-      </el-steps>
+    <el-dialog
+      class="w-full"
+      v-model="stepDialogVisible"
+      title="报修进度"
+      :before-close="handleCloseDialog"
+      :width="'700px'"
+    >
+      <div class="el-dialog">
+        <div class="flex justify-center items-center h-full">
+          <el-steps :active="getStepIndex(currentRow?.status)" align-center>
+            <el-step title="待审核" description="您的报修已提交，等待审核。" />
+            <el-step title="处理中" description="您的报修正在处理中。" />
+            <el-step
+              title="已完成"
+              description="报修已完成，感谢您的耐心等待。"
+            />
+          </el-steps>
+        </div>
+      </div>
     </el-dialog>
 
     <!-- 编辑报修模态框 -->
-    <el-dialog :visible.sync="editRepairModalVisible" title="编辑报修订单" width="500px">
-      <el-form :model="editRepairModalData" label-width="80px">
-        <el-form-item label="姓名" :rules="[{ required: true, message: '请输入姓名', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.name" placeholder="请输入姓名" />
+    <el-dialog
+      :visible.sync="editRepairModalVisible"
+      title="编辑报修订单"
+      width="700px"
+    >
+      <el-form :model="editRepairModalData" label-width="100px">
+        <el-form-item
+          label="姓名"
+          :rules="[{ required: true, message: '请输入姓名', trigger: 'blur' }]"
+        >
+          <el-input
+            v-model="editRepairModalData.name"
+            placeholder="请输入姓名"
+          />
         </el-form-item>
-        <el-form-item label="手机号" :rules="[{ required: true, message: '请输入手机号', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.phone" placeholder="请输入手机号" />
+        <el-form-item
+          label="手机号"
+          :rules="[
+            { required: true, message: '请输入手机号', trigger: 'blur' },
+          ]"
+        >
+          <el-input
+            v-model="editRepairModalData.phone"
+            placeholder="请输入手机号"
+          />
         </el-form-item>
-        <el-form-item label="地址" :rules="[{ required: true, message: '请输入地址', trigger: 'blur' }]">
-          <el-input v-model="editRepairModalData.address" placeholder="请输入地址" />
+        <el-form-item
+          label="地址"
+          :rules="[{ required: true, message: '请输入地址', trigger: 'blur' }]"
+        >
+          <el-input
+            v-model="editRepairModalData.address"
+            placeholder="请输入地址"
+          />
         </el-form-item>
-        <el-form-item label="报修类型" :rules="[{ required: true, message: '请选择报修类型', trigger: 'blur' }]">
-          <el-select v-model="editRepairModalData.type_id" placeholder="请选择报修类型">
+        <el-form-item
+          label="报修类型"
+          :rules="[
+            { required: true, message: '请选择报修类型', trigger: 'blur' },
+          ]"
+        >
+          <el-select
+            v-model="editRepairModalData.type_id"
+            placeholder="请选择报修类型"
+          >
             <el-option
               v-for="item in repairTypeList"
               :key="item.id"
@@ -98,7 +150,7 @@
             type="textarea"
             v-model="editRepairModalData.description"
             placeholder="请输入报修描述"
-            rows="4"
+            rows="6"
           />
         </el-form-item>
         <div slot="footer" class="dialog-footer">
@@ -224,38 +276,3 @@ const handleCloseDialog = () => {
   currentRow.value = null;
 };
 </script>
-
-<style scoped>
-.empty-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.el-dialog {
-  border-radius: 8px;
-  padding: 20px;
-}
-
-.el-form-item {
-  margin-bottom: 20px;
-}
-
-.el-button {
-  border-radius: 4px;
-}
-
-.el-steps {
-  margin-top: 20px;
-}
-
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.el-select {
-  width: 100%;
-}
-</style>

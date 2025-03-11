@@ -14,9 +14,10 @@ import { errorView } from "@/router/modules/errorView";
 import UserRole from "@/views/user/role.vue";
 import PublishArticle from "@/views/content/posts/index.vue";
 import ArticleList from "@/views/content/list/index.vue";
-import RepairList from "@/views/repair/list.vue";
 import RepairType from "@/views/repair/type.vue";
 import SystemSettings from "@/views/system/index.vue";
+import GoodsList from "@/views/goods/list.vue";
+import ReviewList from "@/views/review/list.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -55,9 +56,14 @@ const routes: RouteRecordRaw[] = [
         name: "RepairType",
       },
       {
-        path: "/repair/list",
-        component: RepairList,
-        name: "RepairList",
+        path: "/goods/list",
+        component: GoodsList,
+        name: "GoodsList",
+      },
+      {
+        path: "/review",
+        component: ReviewList,
+        name: "ReviewList",
       },
       {
         path: "/system/",

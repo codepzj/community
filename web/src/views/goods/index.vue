@@ -24,7 +24,7 @@
             <el-image
               class="rounded-lg shadow-sm w-full h-[200px]"
               fit="cover"
-              :src="item.image || defaultImage"
+              :src="baseUrl + item.image || defaultImage"
               :alt="item.name || '商品图片'"
             />
             <el-divider />
@@ -82,6 +82,7 @@ import { storeToRefs } from "pinia";
 import { showMessage } from "@/utils/message";
 import { getRepairType } from "@/api/repair_type";
 
+const baseUrl = import.meta.env.VITE_API_URL;
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 const cartStore = useCartStore();

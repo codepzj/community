@@ -5,6 +5,7 @@ var _goods = require("./goods");
 var _orders = require("./orders");
 var _repair_type = require("./repair_type");
 var _repairs = require("./repairs");
+var _super_admin = require("./super_admin");
 var _users = require("./users");
 
 function initModels(sequelize) {
@@ -14,6 +15,7 @@ function initModels(sequelize) {
   var orders = _orders(sequelize, DataTypes);
   var repair_type = _repair_type(sequelize, DataTypes);
   var repairs = _repairs(sequelize, DataTypes);
+  var super_admin = _super_admin(sequelize, DataTypes);
   var users = _users(sequelize, DataTypes);
 
   carts.belongsTo(goods, { as: "good", foreignKey: "goods_id"});
@@ -38,6 +40,7 @@ function initModels(sequelize) {
     orders,
     repair_type,
     repairs,
+    super_admin,
     users,
   };
 }

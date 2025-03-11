@@ -51,7 +51,12 @@ const items: ItemType[] = reactive([
   ]),
   getItem("维修管理", "Repair", () => h(SettingOutlined), [
     getItem("维修类型", "RepairType", null),
-    getItem("维修列表", "RepairList", null),
+  ]),
+  getItem("商品管理", "Goods", () => h(SettingOutlined), [
+    getItem("商品列表", "GoodsList", null),
+  ]),
+  getItem("审核管理", "Review", () => h(SettingOutlined), [
+    getItem("审核列表", "ReviewList", null),
   ]),
   getItem("系统设置", "System", () => h(SettingOutlined), [
     getItem("系统设置", "SystemSettings", null),

@@ -3,7 +3,7 @@ const { RepairsModel } = require("../database/index");
 class RepairService {
   async createRepair(repair) {
     const { status, ...rest } = repair;
-    // 更新报修表状态为待支付
+    // 更新报修表状态为待审核
     const formattedRepair = {
       ...rest,
       status: "pending",
@@ -15,6 +15,14 @@ class RepairService {
     }
   }
 
+  // 获取待审核
+  async findRepairPending() {
+    try {
+      return await RepairsModel.findAll({ where: { status: "pending" } });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
   // 获取所有申报
   async findAllRepairByUserId(user_id) {
     try {
@@ -74,6 +82,15 @@ class RepairService {
     try {
       const deleted = await RepairsModel.destroy({ where: { id } });
       return deleted ? true : false;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  // 更新保修状态
+  async updateRepairStatus(id, status) {
+    try {
+      return await RepairsModel.update({ status }, { where: { id } });
     } catch (error) {
       throw new Error(error.message);
     }

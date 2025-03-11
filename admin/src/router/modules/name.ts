@@ -7,9 +7,8 @@ export const routeNames = {
   PublishArticle: "发布公告",
   ArticleList: "公告列表",
   RepairType: "维修类型",
-  RepairList: "维修列表",
-  SystemNotifications: "系统通知",
-  UserNotifications: "用户通知",
+  GoodsList: "商品列表",
+  Review: "审核管理",
   SystemSettings: "系统设置",
   SystemConfig: "系统设置",
 };

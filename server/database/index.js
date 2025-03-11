@@ -39,5 +39,9 @@ db.AnnouncementsModel = require("../models/announcements")(
   sequelize,
   Sequelize.DataTypes
 );
+db.SuperAdminModel = require("../models/super_admin")(
+  sequelize,
+  Sequelize.DataTypes
+);
 
 module.exports = db;
