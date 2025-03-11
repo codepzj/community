@@ -107,9 +107,90 @@ CREATE TABLE super_admin (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 初始化数据
-INSERT INTO repair_type (name, price) VALUES 
-('家用电器', 100),
-('水电设施', 200),
-('门窗设备', 300),
-('网络设备', 400);
+-- 论坛帖子表 (posts)
+CREATE TABLE posts (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 插入用户数据（普通用户）
+INSERT INTO users (username, password, email, avatar, phone, address)
+VALUES 
+('test', '123456', 'zhangsan@example.com', NULL, '1357924680', '某某小区2号楼301'),
+('lisi', 'hashed_password2', 'lisi@example.com', NULL, '1472583690', '某某小区3号楼102'),
+('wangwu', 'hashed_password3', 'wangwu@example.com', NULL, '1593572468', '某某小区1号楼505'),
+('zhaoliu', 'hashed_password4', 'zhaoliu@example.com', NULL, '18623456789', '某某小区4号楼201'),
+('sunqi', 'hashed_password5', 'sunqi@example.com', NULL, '13356789012', '某某小区5号楼1203');
+
+-- 插入报修类型
+INSERT INTO repair_type (name, price) 
+VALUES 
+('水管维修', 50.00),
+('电路维修', 80.00),
+('家电维修', 100.00),
+('门窗维修', 70.00),
+('地板维修', 120.00);
+
+-- 插入商品数据
+INSERT INTO goods (name, price, description, image, type_id)
+VALUES 
+('LED节能灯泡', 15.00, '高亮节能灯泡', NULL, 2),
+('不锈钢水龙头', 35.00, '耐用防锈', NULL, 1),
+('电风扇', 180.00, '静音立式风扇', NULL, 3),
+('电饭煲', 250.00, '多功能智能电饭煲', NULL, 3),
+('木质门锁', 60.00, '防盗耐用', NULL, 4),
+('瓷砖修复剂', 45.00, '适用于地板裂缝修复', NULL, 5);
+
+-- 插入报修记录
+INSERT INTO repairs (user_id, name, phone, region, address, report_date, type_id, description, status, assigned_worker)
+VALUES 
+(1, '张三', '1357924680', '某某小区', '2号楼301', '2025-03-08', 1, '厨房水管漏水严重', 'completed', 2),
+(2, '李四', '1472583690', '某某小区', '3号楼102', '2025-03-09', 2, '客厅电路跳闸', 'in_progress', 3),
+(3, '王五', '1593572468', '某某小区', '1号楼505', '2025-03-10', 3, '洗衣机不启动', 'pending', NULL),
+(4, '赵六', '18623456789', '某某小区', '4号楼201', '2025-03-11', 4, '窗户合不上', 'pending', NULL),
+(5, '孙七', '13356789012', '某某小区', '5号楼1203', '2025-03-12', 5, '地板出现裂缝', 'in_progress', 1);
+
+-- 插入购物车数据
+INSERT INTO carts (cart_id, user_id, goods_id, goods_num)
+VALUES 
+('cart1001', 1, 1, 3),
+('cart1002', 2, 3, 1),
+('cart1003', 3, 4, 1),
+('cart1004', 4, 2, 2),
+('cart1005', 5, 6, 4);
+
+-- 插入订单数据
+INSERT INTO orders (order_id, user_id, cart_id, amount, order_status)
+VALUES 
+('order001', 1, 'cart1001', 45.00, 'paid'),
+('order002', 2, 'cart1002', 180.00, 'pending'),
+('order003', 3, 'cart1003', 250.00, 'paid'),
+('order004', 4, 'cart1004', 70.00, 'pending'),
+('order005', 5, 'cart1005', 180.00, 'paid');
+
+-- 插入系统公告
+INSERT INTO announcements (title, content)
+VALUES 
+('小区停水通知', '由于市政管道维修，3月15日全天停水，请大家提前储水。'),
+('电梯检修通知', '3月18日上午，小区所有电梯将进行年度维护，预计下午恢复使用。'),
+('垃圾分类新规', '从4月1日起，小区将实行新的垃圾分类标准，请大家遵守相关规定。');
+
+-- 插入超级管理员
+INSERT INTO super_admin (username, password, role_id)
+VALUES 
+('superadmin', '123456', 1),
+('sam', '123456', 2);
+
+-- 插入论坛帖子
+INSERT INTO posts (user_id, title, content)
+VALUES 
+(1, '小区电梯又坏了，什么时候修？', '最近电梯坏得很频繁，希望物业能彻底维修一下。'),
+(2, '有没有合租的朋友？', '最近打算找个合租伙伴，有没有同小区的朋友？'),
+(3, '小区周边有什么好吃的？', '新搬来这里，求推荐好吃的餐馆。'),
+(4, '楼下的宠物太吵了怎么办？', '楼下邻居养的狗每天早上6点叫，真的受不了了。'),
+(5, '物业费要涨价了？', '听说物业费又要涨价了，是真的吗？');

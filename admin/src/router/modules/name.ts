@@ -3,7 +3,6 @@ export const routeNames = {
   Dashboard: "仪表盘",
   ResidentList: "居民列表",
   UserList: "用户列表",
-  UserRole: "用户角色",
   PublishArticle: "发布公告",
   ArticleList: "公告列表",
   RepairType: "维修类型",

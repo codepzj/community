@@ -1,5 +1,8 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Layout from "@/layout/index.vue";
+import { ElMessage } from "element-plus";
+
+import { useUserStore } from "@/store/users";
 
 const routes = [
   {
@@ -64,9 +67,14 @@ const routes = [
         name: "GoodsList",
       },
       {
-        path: "posts/:id",
-        component: () => import("@/views/home/posts.vue"),
+        path: "posts",
+        component: () => import("@/views/posts/index.vue"),
         name: "Posts",
+      },
+      {
+        path: "announcement",
+        component: () => import("@/views/home/announcement.vue"),
+        name: "Announcement",
       },
     ],
   },
@@ -82,4 +90,17 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  // 排除首页
+  if (to.path === "/") {
+    next();
+    return;
+  }
+  if (!userStore.user) {
+    ElMessage.error("请先登录");
+    next({ path: "/" });
+  }
+  next();
+});
 export default router;

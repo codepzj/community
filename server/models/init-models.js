@@ -3,6 +3,7 @@ var _announcements = require("./announcements");
 var _carts = require("./carts");
 var _goods = require("./goods");
 var _orders = require("./orders");
+var _posts = require("./posts");
 var _repair_type = require("./repair_type");
 var _repairs = require("./repairs");
 var _super_admin = require("./super_admin");
@@ -13,6 +14,7 @@ function initModels(sequelize) {
   var carts = _carts(sequelize, DataTypes);
   var goods = _goods(sequelize, DataTypes);
   var orders = _orders(sequelize, DataTypes);
+  var posts = _posts(sequelize, DataTypes);
   var repair_type = _repair_type(sequelize, DataTypes);
   var repairs = _repairs(sequelize, DataTypes);
   var super_admin = _super_admin(sequelize, DataTypes);
@@ -28,6 +30,8 @@ function initModels(sequelize) {
   users.hasMany(carts, { as: "carts", foreignKey: "user_id"});
   orders.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(orders, { as: "orders", foreignKey: "user_id"});
+  posts.belongsTo(users, { as: "user", foreignKey: "user_id"});
+  users.hasMany(posts, { as: "posts", foreignKey: "user_id"});
   repairs.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(repairs, { as: "repairs", foreignKey: "user_id"});
   repairs.belongsTo(users, { as: "assigned_worker_user", foreignKey: "assigned_worker"});
@@ -38,6 +42,7 @@ function initModels(sequelize) {
     carts,
     goods,
     orders,
+    posts,
     repair_type,
     repairs,
     super_admin,

@@ -4,75 +4,102 @@
       v-model:selectedKeys="state.selectedKeys"
       mode="inline"
       :open-keys="state.openKeys"
-      :items="items"
+      :items="filteredItems"
       @openChange="onOpenChange"
       @select="onSelect"
       :style="{ height: '100%', borderRight: 0 }"
     ></a-menu>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { VueElement, h, reactive } from "vue";
+import { h, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/store/user";
 import {
   HomeOutlined,
   UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
 } from "@ant-design/icons-vue";
-import type { ItemType } from "ant-design-vue";
+import type { MenuProps } from "ant-design-vue";
 
+type MenuItemType = Required<MenuProps>["items"][number];
+
+// **getItem 方法：区分子菜单和单项**
 function getItem(
-  label: VueElement | string,
+  label: string,
   key: string,
+  role: string, // 修改为 string 类型
   icon?: any,
-  children?: ItemType[],
-  type?: "group"
-): ItemType {
-  return {
-    key: key.charAt(0).toUpperCase() + key.slice(1), // 将key改为大驼峰
-    icon,
-    children,
-    label,
-    type,
-  } as ItemType;
+  children?: MenuItemType[]
+): MenuItemType {
+  if (children && children.length) {
+    return {
+      key,
+      icon,
+      label,
+      children, // 仅 SubMenuType 才有 children
+      type: undefined, // 避免 TypeScript 误判
+      role,
+    } as MenuItemType;
+  } else {
+    return {
+      key,
+      icon,
+      label,
+      type: undefined,
+      role,
+    } as MenuItemType;
+  }
 }
 
-const items: ItemType[] = reactive([
-  getItem("仪表盘", "Dashboard", () => h(HomeOutlined)),
-  getItem("用户管理", "User", () => h(UserOutlined), [
-    getItem("居民列表", "ResidentList", null),
-    getItem("用户列表", "UserList", null),
-    getItem("用户角色", "UserRole", null),
+const userStore = useUserStore();
+const userRole = userStore.user?.role_id || '0'; // 获取当前用户角色 ID，确保为字符串
+
+const items: MenuItemType[] = [
+  getItem("仪表盘", "Dashboard", "1,2", () => h(HomeOutlined)), // 修改为字符串
+  getItem("用户管理", "User", "1,2", () => h(UserOutlined), [
+    getItem("居民列表", "ResidentList", "1,2"), // 修改为字符串
+    getItem("用户列表", "UserList", "1"), // 修改为字符串
   ]),
-  getItem("公告管理", "Content", () => h(AppstoreOutlined), [
-    getItem("发布公告", "PublishArticle", null),
-    getItem("公告列表", "ArticleList", null),
+  getItem("公告管理", "Content", "1,2", () => h(AppstoreOutlined), [
+    getItem("发布公告", "PublishArticle", "1,2"), // 修改为字符串
+    getItem("公告列表", "ArticleList", "1,2"), // 修改为字符串
   ]),
-  getItem("维修管理", "Repair", () => h(SettingOutlined), [
-    getItem("维修类型", "RepairType", null),
+  getItem("维修管理", "Repair", "1", () => h(SettingOutlined), [
+    getItem("维修类型", "RepairType", "1"), // 修改为字符串
   ]),
-  getItem("商品管理", "Goods", () => h(SettingOutlined), [
-    getItem("商品列表", "GoodsList", null),
+  getItem("商品管理", "Goods", "1", () => h(SettingOutlined), [
+    getItem("商品列表", "GoodsList", "1"), // 修改为字符串
   ]),
-  getItem("审核管理", "Review", () => h(SettingOutlined), [
-    getItem("审核列表", "ReviewList", null),
+  getItem("审核管理", "Review", "1,2", () => h(SettingOutlined), [
+    getItem("审核列表", "ReviewList", "1,2"), // 修改为字符串
   ]),
-  getItem("系统设置", "System", () => h(SettingOutlined), [
-    getItem("系统设置", "SystemSettings", null),
+  getItem("系统设置", "System", "1", () => h(SettingOutlined), [
+    getItem("系统设置", "SystemSettings", "1"), // 修改为字符串
   ]),
-]);
+];
+
+// **过滤菜单**
+const filteredItems = computed(() => {
+  return items
+    .map((item) => {
+      if (item && "children" in item && item.children) {
+        const filteredChildren = item.children.filter((child) =>
+          (child as any).role?.split(',').map(Number).includes(userRole) // 修改为字符串处理
+        );
+        return filteredChildren.length > 0
+          ? { ...item, children: filteredChildren }
+          : null;
+      }
+      return (item as any).role?.split(',').map(Number).includes(userRole) ? item : null; // 修改为字符串处理
+    })
+    .filter(Boolean) as MenuItemType[];
+});
 
 const state = reactive({
-  rootSubmenuKeys: [
-    "Dashboard",
-    "User",
-    "Content",
-    "Interaction",
-    "Data",
-    "Notice",
-    "System",
-  ],
+  rootSubmenuKeys: ["Dashboard", "User", "Content", "Repair", "Goods", "Review", "System"],
   openKeys: ["User", "Content"],
   selectedKeys: [],
 });

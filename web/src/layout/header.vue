@@ -4,7 +4,7 @@
     :ellipsis="false"
     class="flex items-center justify-between"
   >
-    <div class="flex items-center justify-center">
+    <div class="flex items-center justify-end">
       <el-menu-item @click="router.push('/')">
         <img
           style="width: 100px"
@@ -12,9 +12,16 @@
           alt="Element logo"
         />
       </el-menu-item>
-      <el-menu-item @click="router.push('/goods')"> 物资采购 </el-menu-item>
     </div>
     <div class="flex items-center justify-center">
+      <el-menu-item @click="router.push('/goods')"> 物资采购 </el-menu-item>
+      <el-menu-item @click="router.push('/order/repair')">
+        维修订单
+      </el-menu-item>
+      <el-menu-item @click="router.push('/order/shopping')">
+        采购订单
+      </el-menu-item>
+      <el-menu-item @click="router.push('/posts')"> 居民论坛 </el-menu-item>
       <el-badge :value="cartGoodsNum">
         <el-button
           circle
@@ -210,5 +217,4 @@ const logout = () => {
 :deep(.el-button + .el-button) {
   margin-left: 10px;
 }
-
 </style>

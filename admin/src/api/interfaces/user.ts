@@ -18,8 +18,9 @@ export interface ResidentReq {
 }
 
 export interface User {
-  id: string;
+  id?: number;
   username: string;
+  password: string;
   role_id: number;
 }
 
@@ -33,17 +34,6 @@ export interface LoginReq {
 }
 
 export interface LoginVO {
-  token: string; // 令牌
+  exist: boolean;
   user: User;
 }
-
-export interface UserManage {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  username: string;
-  password: string;
-  role_id: number;
-}
-
-export type UserListVO = UserManage[];

@@ -28,10 +28,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { getPostsDetail } from "@/api/posts";
+import { getAnnounceMentDetail } from "@/api/posts";
 import dayjs from "dayjs";
-import { MdPreview, MdCatalog } from 'md-editor-v3';
-import 'md-editor-v3/lib/preview.css';
+import { MdPreview, MdCatalog } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 
 const editorid = "preview-only";
 const scrollElement = document.documentElement;
@@ -39,7 +39,7 @@ const { id } = useRoute().params;
 const postsDetail = ref({});
 
 onMounted(async () => {
-  const res = await getPostsDetail(id);
+  const res = await getAnnounceMentDetail(id);
   postsDetail.value = res.data;
 });
 </script>

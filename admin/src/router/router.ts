@@ -7,11 +7,10 @@ import {
 import Layout from "@/layout/index.vue";
 import Dashboard from "@/views/dashboard/index.vue";
 import ResidentList from "@/views/user/resident.vue";
-import UserList from "@/views/user/list.vue";
 import Login from "@/views/auth/login.vue";
 import Test from "@/views/test/index.vue";
 import { errorView } from "@/router/modules/errorView";
-import UserRole from "@/views/user/role.vue";
+import UserList from "@/views/user/list.vue";
 import PublishArticle from "@/views/content/posts/index.vue";
 import ArticleList from "@/views/content/list/index.vue";
 import RepairType from "@/views/repair/type.vue";
@@ -24,51 +23,59 @@ const routes: RouteRecordRaw[] = [
     path: "/",
     component: Layout,
     children: [
-      { path: "/", component: Dashboard, name: "Dashboard" },
+      {
+        path: "/",
+        component: Dashboard,
+        name: "Dashboard",
+        meta: { role_id: [1, 2] },
+      },
       {
         path: "/user/resident",
         component: ResidentList,
         name: "ResidentList",
+        meta: { role_id: [1, 2] },
       },
       {
         path: "/user/list",
         component: UserList,
         name: "UserList",
-      },
-      {
-        path: "/user/role",
-        component: UserRole,
-        name: "UserRole",
+        meta: { role_id: [1] },
       },
       {
         path: "/content/posts",
         component: PublishArticle,
         name: "PublishArticle",
+        meta: { role_id: [1, 2] },
       },
       {
         path: "/content/list",
         component: ArticleList,
         name: "ArticleList",
+        meta: { role_id: [1, 2] },
       },
       {
         path: "/repair/type",
         component: RepairType,
         name: "RepairType",
+        meta: { role_id: [1] },
       },
       {
         path: "/goods/list",
         component: GoodsList,
         name: "GoodsList",
+        meta: { role_id: [1] },
       },
       {
         path: "/review",
         component: ReviewList,
         name: "ReviewList",
+        meta: { role_id: [1, 2] },
       },
       {
         path: "/system/",
         component: SystemSettings,
         name: "SystemSettings",
+        meta: { role_id: [1] },
       },
     ],
   },

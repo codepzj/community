@@ -4,7 +4,6 @@
       v-if="tableData.length"
       :data="tableData"
       border
-      size="small"
       style="width: 100%"
     >
       <el-table-column prop="name" label="姓名" width="180" />

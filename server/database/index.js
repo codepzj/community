@@ -43,5 +43,6 @@ db.SuperAdminModel = require("../models/super_admin")(
   sequelize,
   Sequelize.DataTypes
 );
+db.PostsModel = require("../models/posts")(sequelize, Sequelize.DataTypes);
 
 module.exports = db;

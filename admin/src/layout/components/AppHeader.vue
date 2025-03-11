@@ -28,7 +28,6 @@
         <template #overlay>
           <a-menu @click="onClick">
             <a-menu-item key="1">退出登录</a-menu-item>
-            <a-menu-item key="2">设置</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>

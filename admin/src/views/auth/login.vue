@@ -39,10 +39,6 @@
               >记住我</a-checkbox
             >
           </a-form-item>
-          <span class="float-right space-x-2 w-32">
-            <a class="text-sm" href="">忘记密码</a>
-            <a class="text-sm" href="">立即注册</a>
-          </span>
         </a-form-item>
 
         <a-form-item class="flex justify-center">
@@ -64,16 +60,16 @@ import { reactive, computed } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import type { LoginForm, LoginVO } from "@/api/interfaces/user";
-import { userLogin } from "@/api/modules/user";
 import { useUserStore } from "@/store/user";
 import darkLogo from "@/assets/logo/logo-dark.png";
 import lightLogo from "@/assets/logo/logo-light.png";
 import type { Response } from "@/api/interfaces/resp";
 import { useRouter } from "vue-router";
 import { useThemeStore } from "@/store/theme";
+import { Login } from "@/api/modules/user";
 
 const themeStore = useThemeStore();
-const { setUser, setToken } = useUserStore();
+const { setUser } = useUserStore();
 const router = useRouter();
 
 const loginForm: LoginForm = reactive({
@@ -87,10 +83,12 @@ const onFinish = async (loginForm: LoginForm) => {
   const key = "updatable";
   try {
     message.loading({ content: "登录中", key });
-    const res: Response<LoginVO> = await userLogin(loginForm);
-    // 设置用户信息和token
+    const res: Response<LoginVO> = await Login(loginForm);
+    if (!res.data.exist) {
+      message.error({ content: "用户不存在", key });
+      return;
+    }
     setUser(res.data.user);
-    setToken(res.data.token);
     message.success({ content: "登录成功", key });
     router.push("/");
   } catch (error: any) {
