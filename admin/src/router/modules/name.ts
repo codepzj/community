@@ -10,4 +10,5 @@ export const routeNames = {
   Review: "审核管理",
   SystemSettings: "系统设置",
   SystemConfig: "系统设置",
+  PaymentManage: "缴费管理",
 };

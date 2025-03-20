@@ -30,6 +30,16 @@ class UserController {
     }
   }
 
+  async findUserById(req, res) {
+    const { id } = req.params;
+    try {
+      const user = await userService.findUserById(id);
+      res.json(success("查询用户成功", user));
+    } catch (error) {
+      res.json(failOnServer(error.message));
+    }
+  }
+
   async updateUser(req, res) {
     const { id, email, avatar, phone, address } = req.body;
     try {

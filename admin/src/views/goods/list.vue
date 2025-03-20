@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end m-4">
+    <div class="flex justify-start my-4">
     <a-button type="primary" @click="addGoodsClick">添加商品</a-button>
   </div>
   <div>

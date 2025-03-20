@@ -15,7 +15,7 @@
         <!-- 商品图片 -->
         <el-image
           class="w-20 h-20 rounded-lg shadow-sm"
-          :src="item.image"
+          :src="`${baseUrl}${item.image}`"
           :alt="item.name"
           fit="cover"
         />
@@ -84,6 +84,8 @@ import { storeToRefs } from "pinia";
 import { showMessage } from "@/utils/message";
 import { useRouter } from "vue-router";
 import { addCart } from "@/api/cart";
+
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const props = defineProps({
   drawerVisible: {

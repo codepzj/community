@@ -21,4 +21,8 @@ export default defineConfig({
       "@": resolve(__dirname, "./src"),
     },
   },
+  server: {
+    port: 9003,
+    host: "0.0.0.0",
+  },
 });

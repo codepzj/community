@@ -12,6 +12,7 @@ const ordersRouter = require("./routes/orders");
 const announcementsRouter = require("./routes/announcements");
 const postsRouter = require("./routes/posts");
 const adminRouter = require("./routes/admin");
+const paymentRouter = require("./routes/payment");
 // 解析请求体
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +34,7 @@ app.use("/order", ordersRouter);
 app.use("/announcement", announcementsRouter);
 app.use("/admin", adminRouter);
 app.use("/posts", postsRouter);
-
+app.use("/payment", paymentRouter);
 // 路由未匹配
 app.use("*", (req, res) => {
   res.status(404).json({ code: 404, msg: "路由未匹配" });

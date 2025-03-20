@@ -1,20 +1,24 @@
 <template>
-  <a-table :columns="columns" :data-source="residentList">
+  <a-table :columns="columns" :data-source="residentList" bordered>
     <template #headerCell="{ column }">
       <template v-if="column.key === 'username'"> 用户名 </template>
     </template>
 
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'username'">
-        <a>
+        <a :href="'mailto:' + record.email" target="_blank" rel="noopener noreferrer">
           {{ record.username }}
         </a>
       </template>
       <template v-else-if="column.key === 'email'">
-        <span>{{ record.email }}</span>
+        <a :href="'mailto:' + record.email" target="_blank" rel="noopener noreferrer">
+          {{ record.email }}
+        </a>
       </template>
       <template v-else-if="column.key === 'phone'">
-        <span>{{ record.phone }}</span>
+        <a :href="'tel:' + record.phone" target="_blank" rel="noopener noreferrer">
+          {{ record.phone }}
+        </a>
       </template>
       <template v-else-if="column.key === 'address'">
         <span>{{ record.address }}</span>
@@ -27,11 +31,11 @@
       </template>
       <template v-else-if="column.key === 'action'">
         <span>
-          <a-button size="small" @click="handleEdit(record)">编辑</a-button>
+          <a-button size="small" type="primary" @click="handleEdit(record)">编辑</a-button>
           <a-divider type="vertical" />
-          <a-button danger size="small" @click="handleDelete(record.id)"
-            >删除</a-button
-          >
+          <a-button size="small" type="danger" @click="handleDelete(record.id)">删除</a-button>
+          <a-divider type="vertical" />
+          <a-button size="small" type="success" @click="handleCreatePayment(record.id)">创建缴费</a-button>
         </span>
       </template>
     </template>
@@ -54,6 +58,20 @@
       </a-form-item>
     </a-form>
   </a-modal>
+
+  <a-modal v-model:open="openPayment" title="创建缴费" @ok="handleCreatePaymentOk">
+    <a-form :model="newPayment" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
+      <a-form-item label="水费">
+        <a-input v-model:value="newPayment.water_fee" />
+      </a-form-item>
+      <a-form-item label="电费">
+        <a-input v-model:value="newPayment.electricity_fee" />
+      </a-form-item>
+      <a-form-item label="物业费">
+        <a-input v-model:value="newPayment.property_fee" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
@@ -64,6 +82,8 @@ import {
   deleteResidentById,
   updateResident,
 } from "@/api/modules/user";
+import { createPayment } from "@/api/modules/payments";
+import type { paymentReq } from "@/api/interfaces/payments";
 import { formatTime } from "@/utils/time";
 import { message } from "ant-design-vue";
 
@@ -75,7 +95,13 @@ const newResident = ref<ResidentReq>({
   address: "",
 });
 const open = ref(false);
-
+const openPayment = ref(false);
+const newPayment = ref<paymentReq>({
+  resident_id: 0,
+  water_fee: 10.00,
+  electricity_fee: 10.00,
+  property_fee: 10.00,
+});
 onMounted(async () => {
   const res = await getResidentList();
   residentList.value = res.data;
@@ -116,6 +142,23 @@ const handleDelete = async (id: number) => {
     const res = await deleteResidentById(id);
     message.success(res.msg);
     residentList.value = residentList.value.filter((item) => item.id !== id);
+  } catch (err: any) {
+    message.error(err);
+  }
+};
+
+const handleCreatePayment = (id: number) => {
+  newPayment.value.resident_id = id;
+  openPayment.value = true;
+};
+
+const handleCreatePaymentOk = async () => {
+  try {
+    const res = await createPayment(newPayment.value);
+    message.success(res.msg);
+
+    // 关闭弹窗
+    openPayment.value = false;
   } catch (err: any) {
     message.error(err);
   }

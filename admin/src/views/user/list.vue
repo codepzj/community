@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="flex justify-end my-4">
-      <a-button type="primary" @click="handleAddUser">
+  <div class="user-list-container">
+    <div class="flex justify-start my-4">
+      <a-button type="primary" @click="handleAddUser" class="add-user-btn">
         新增用户
       </a-button>
     </div>
@@ -11,6 +11,7 @@
       :pagination="pagination"
       row-key="id"
       bordered
+      class="user-table"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'username'">
@@ -28,15 +29,19 @@
           <span>{{ formatTime(record.updatedAt) }}</span>
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button size="small" @click="handleEdit(record)">编辑</a-button>
+          <a-button size="small" @click="handleEdit(record)" class="edit-btn">
+            编辑
+          </a-button>
           <a-divider type="vertical" />
-          <a-button danger size="small" @click="handleDelete(record.id)">删除</a-button>
+          <a-button danger size="small" @click="handleDelete(record.id)" class="delete-btn">
+            删除
+          </a-button>
         </template>
       </template>
     </a-table>
 
     <!-- 编辑用户弹窗 -->
-    <a-modal v-model:open="openEdit" title="编辑用户" @ok="handleOk">
+    <a-modal v-model:open="openEdit" title="编辑用户" @ok="handleOk" class="edit-modal">
       <a-form :model="editUserData" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
         <a-form-item label="用户名">
           <a-input v-model:value="editUserData.username" disabled />
@@ -51,7 +56,7 @@
     </a-modal>
 
     <!-- 新增用户弹窗 -->
-    <a-modal v-model:open="openCreate" title="新增用户" @ok="handleCreateOk">
+    <a-modal v-model:open="openCreate" title="新增用户" @ok="handleCreateOk" class="create-modal">
       <a-form :model="newUserData" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
         <a-form-item label="用户名">
           <a-input v-model:value="newUserData.username" />

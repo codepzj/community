@@ -15,8 +15,12 @@
         <span v-if="column.dataIndex === 'phone'">{{ record.phone }}</span>
         <span v-if="column.dataIndex === 'region'">{{ record.region }}</span>
         <span v-if="column.dataIndex === 'address'">{{ record.address }}</span>
-        <span v-if="column.dataIndex === 'report_date'">{{ record.report_date }}</span>
-        <span v-if="column.dataIndex === 'description'">{{ record.description }}</span>
+        <span v-if="column.dataIndex === 'report_date'">{{
+          record.report_date
+        }}</span>
+        <span v-if="column.dataIndex === 'description'">{{
+          record.description
+        }}</span>
 
         <span v-if="column.dataIndex === 'status'">
           <a-tag :color="record.status === 'pending' ? 'orange' : 'green'">
@@ -24,7 +28,15 @@
           </a-tag>
         </span>
         <span v-if="column.dataIndex === 'action'">
-          <a-button type="link" @click="approveRepair(record.id)">通过</a-button>
+          <a-button
+            :disabled="record.status === 'in_progress'"
+            type="link"
+            @click="approveRepair(record.id)"
+            >通过</a-button
+          >
+          <a-button type="link" @click="completeRepair(record.id)"
+            >完成</a-button
+          >
         </span>
       </template>
     </a-table>
@@ -71,11 +83,29 @@ onMounted(async () => {
   }
 });
 
+// 审核通过
 const approveRepair = async (id: number) => {
   try {
     const res = await checkRepair(id, { status: "in_progress" });
     if (res.code === 200) {
-      message.success(res.msg);
+      // 更新申报表状态
+      const updateRes = await getPendingRepair();
+      pendingRepair.value = updateRes.data;
+      message.success("审核通过");
+    } else {
+      message.error(res.msg);
+    }
+  } catch (error) {
+    message.error("审核失败");
+  }
+};
+
+// 完成
+const completeRepair = async (id: number) => {
+  try {
+    const res = await checkRepair(id, { status: "completed" });
+    if (res.code === 200) {
+      message.success("申报处理完成");
       pendingRepair.value = pendingRepair.value.filter(
         (item: any) => item.id !== id
       );
@@ -83,7 +113,7 @@ const approveRepair = async (id: number) => {
       message.error(res.msg);
     }
   } catch (error) {
-    message.error("审核失败");
+    message.error("申报处理失败");
   }
 };
 </script>

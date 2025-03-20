@@ -3,6 +3,7 @@ var _announcements = require("./announcements");
 var _carts = require("./carts");
 var _goods = require("./goods");
 var _orders = require("./orders");
+var _payments = require("./payments");
 var _posts = require("./posts");
 var _repair_type = require("./repair_type");
 var _repairs = require("./repairs");
@@ -14,6 +15,7 @@ function initModels(sequelize) {
   var carts = _carts(sequelize, DataTypes);
   var goods = _goods(sequelize, DataTypes);
   var orders = _orders(sequelize, DataTypes);
+  var payments = _payments(sequelize, DataTypes);
   var posts = _posts(sequelize, DataTypes);
   var repair_type = _repair_type(sequelize, DataTypes);
   var repairs = _repairs(sequelize, DataTypes);
@@ -30,6 +32,8 @@ function initModels(sequelize) {
   users.hasMany(carts, { as: "carts", foreignKey: "user_id"});
   orders.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(orders, { as: "orders", foreignKey: "user_id"});
+  payments.belongsTo(users, { as: "resident", foreignKey: "resident_id"});
+  users.hasMany(payments, { as: "payments", foreignKey: "resident_id"});
   posts.belongsTo(users, { as: "user", foreignKey: "user_id"});
   users.hasMany(posts, { as: "posts", foreignKey: "user_id"});
   repairs.belongsTo(users, { as: "user", foreignKey: "user_id"});
@@ -42,6 +46,7 @@ function initModels(sequelize) {
     carts,
     goods,
     orders,
+    payments,
     posts,
     repair_type,
     repairs,

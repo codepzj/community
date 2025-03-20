@@ -21,6 +21,10 @@ import {
   UserOutlined,
   AppstoreOutlined,
   SettingOutlined,
+  ToolOutlined,
+  ShoppingCartOutlined,
+  CheckCircleOutlined,
+  MoneyCollectOutlined,
 } from "@ant-design/icons-vue";
 import type { MenuProps } from "ant-design-vue";
 
@@ -58,26 +62,29 @@ const userStore = useUserStore();
 const userRole = userStore.user?.role_id || '0'; // 获取当前用户角色 ID，确保为字符串
 
 const items: MenuItemType[] = [
-  getItem("仪表盘", "Dashboard", "1,2", () => h(HomeOutlined)), // 修改为字符串
+  getItem("仪表盘", "Dashboard", "1,2", () => h(HomeOutlined)), 
   getItem("用户管理", "User", "1,2", () => h(UserOutlined), [
-    getItem("居民列表", "ResidentList", "1,2"), // 修改为字符串
-    getItem("用户列表", "UserList", "1"), // 修改为字符串
+    getItem("居民列表", "ResidentList", "1,2"), 
+    getItem("用户列表", "UserList", "1"), 
   ]),
   getItem("公告管理", "Content", "1,2", () => h(AppstoreOutlined), [
-    getItem("发布公告", "PublishArticle", "1,2"), // 修改为字符串
-    getItem("公告列表", "ArticleList", "1,2"), // 修改为字符串
+    getItem("发布公告", "PublishArticle", "1,2"), 
+    getItem("公告列表", "ArticleList", "1,2"), 
   ]),
-  getItem("维修管理", "Repair", "1", () => h(SettingOutlined), [
-    getItem("维修类型", "RepairType", "1"), // 修改为字符串
+  getItem("维修管理", "Repair", "1", () => h(ToolOutlined), [
+    getItem("维修类型", "RepairType", "1"), 
   ]),
-  getItem("商品管理", "Goods", "1", () => h(SettingOutlined), [
-    getItem("商品列表", "GoodsList", "1"), // 修改为字符串
+  getItem("商品管理", "Goods", "1", () => h(ShoppingCartOutlined), [
+    getItem("商品列表", "GoodsList", "1"), 
   ]),
-  getItem("审核管理", "Review", "1,2", () => h(SettingOutlined), [
-    getItem("审核列表", "ReviewList", "1,2"), // 修改为字符串
+  getItem("审核管理", "Review", "1,2", () => h(CheckCircleOutlined), [
+    getItem("审核列表", "ReviewList", "1,2"), 
+  ]),
+  getItem("缴费管理", "Payment", "1", () => h(MoneyCollectOutlined), [
+    getItem("缴费管理", "PaymentManage", "1"), 
   ]),
   getItem("系统设置", "System", "1", () => h(SettingOutlined), [
-    getItem("系统设置", "SystemSettings", "1"), // 修改为字符串
+    getItem("系统设置", "SystemSettings", "1"), 
   ]),
 ];
 
@@ -87,13 +94,13 @@ const filteredItems = computed(() => {
     .map((item) => {
       if (item && "children" in item && item.children) {
         const filteredChildren = item.children.filter((child) =>
-          (child as any).role?.split(',').map(Number).includes(userRole) // 修改为字符串处理
+          (child as any).role?.split(',').map(Number).includes(userRole) 
         );
         return filteredChildren.length > 0
           ? { ...item, children: filteredChildren }
           : null;
       }
-      return (item as any).role?.split(',').map(Number).includes(userRole) ? item : null; // 修改为字符串处理
+      return (item as any).role?.split(',').map(Number).includes(userRole) ? item : null; 
     })
     .filter(Boolean) as MenuItemType[];
 });

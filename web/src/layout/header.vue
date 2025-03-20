@@ -97,6 +97,12 @@
           show-password
         />
       </el-form-item>
+      <el-form-item prop="phone" label="手机号">
+        <el-input v-model="registerForm.phone" />
+      </el-form-item>
+      <el-form-item prop="address" label="地址">
+        <el-input v-model="registerForm.address" />
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="registerDialogVisible = false">取消</el-button>
@@ -135,7 +141,7 @@ const registerDialogVisible = ref(false);
 const loginFormRef = ref(null);
 const loginForm = reactive({ username: "", password: "" });
 const registerFormRef = ref(null);
-const registerForm = reactive({ username: "", password: "" });
+const registerForm = reactive({ username: "", password: "", phone: "", address: "" });
 const formRules = {
   username: [
     { required: true, message: "请输入用户名", trigger: "blur" },
@@ -144,6 +150,13 @@ const formRules = {
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 6, max: 20, message: "密码长度应为 6-20 个字符", trigger: "blur" },
+  ],
+  phone: [
+    { required: true, message: "请输入手机号", trigger: "blur" },
+    { pattern: /^1[3-9]\d{9}$/, message: "请输入正确的手机号", trigger: "blur" },
+  ],
+  address: [
+    { required: true, message: "请输入地址", trigger: "blur" },
   ],
 };
 
@@ -157,6 +170,10 @@ const registerSubmitForm = async (formEl) => {
       .then((res) => {
         userStore.setUser(res.data);
         showMessage("注册成功");
+        registerForm.username = "";
+        registerForm.password = "";
+        registerForm.phone = "";
+        registerForm.address = "";
         registerDialogVisible.value = false;
       })
       .catch((error) => {

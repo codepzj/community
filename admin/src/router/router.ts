@@ -17,7 +17,7 @@ import RepairType from "@/views/repair/type.vue";
 import SystemSettings from "@/views/system/index.vue";
 import GoodsList from "@/views/goods/list.vue";
 import ReviewList from "@/views/review/list.vue";
-
+import PaymentManage from "@/views/payment/index.vue";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -70,6 +70,12 @@ const routes: RouteRecordRaw[] = [
         component: ReviewList,
         name: "ReviewList",
         meta: { role_id: [1, 2] },
+      },
+      {
+        path: "/payment",
+        component: PaymentManage,
+        name: "PaymentManage",
+        meta: { role_id: [1] },
       },
       {
         path: "/system/",

@@ -5,6 +5,7 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="购物订单" name="shopping"></el-tab-pane>
       <el-tab-pane label="维修订单" name="repair"></el-tab-pane>
+      <el-tab-pane label="水电缴纳" name="fee"></el-tab-pane>
     </el-tabs>
     
     <router-view />
@@ -30,6 +31,8 @@ onMounted(() => {
     activeName.value = "repair";
   } else if (route.path.includes("/order/shopping")) {
     activeName.value = "shopping";
+  } else if (route.path.includes("/order/fee")) {
+    activeName.value = "fee";
   }
 });
 
@@ -39,6 +42,8 @@ watch(activeName, (newVal) => {
     router.push({ path: "/order/shopping" });
   } else if (newVal === "repair") {
     router.push({ path: "/order/repair" });
+  } else if (newVal === "fee") {
+    router.push({ path: "/order/fee" });
   }
 });
 
@@ -48,6 +53,8 @@ watch(() => route.path, (newPath) => {
     activeName.value = "repair";
   } else if (newPath.includes("/order/shopping")) {
     activeName.value = "shopping";
+  } else if (newPath.includes("/order/fee")) {
+    activeName.value = "fee";
   }
 });
 </script>

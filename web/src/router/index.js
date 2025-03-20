@@ -54,6 +54,11 @@ const routes = [
             component: () => import("@/views/order/list/shop/list.vue"),
             name: "ShoppingList",
           },
+          {
+            path: "fee",
+            component: () => import("@/views/order/list/fee/index.vue"),
+            name: "FeeList",
+          },
         ],
       },
       {
@@ -72,7 +77,7 @@ const routes = [
         name: "Posts",
       },
       {
-        path: "announcement",
+        path: "announcement/:id",
         component: () => import("@/views/home/announcement.vue"),
         name: "Announcement",
       },

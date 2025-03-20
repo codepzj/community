@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end m-4">
+  <div class="flex justify-start my-4">
     <a-button type="primary" @click="addRepair">添加维修类型</a-button>
   </div>
   <div>

@@ -12,6 +12,12 @@ export const getResidentList: () => Promise<Response<ResidentVO[]>> = () => {
   return request.get("/admin/user/findAll");
 };
 
+export const getResidentById: (id: number) => Promise<Response<ResidentVO>> = (
+  id
+) => {
+  return request.get(`/admin/user/findById/${id}`);
+};
+
 export const deleteResidentById: (id: number) => Promise<Response<void>> = (
   id
 ) => {

@@ -1,4 +1,5 @@
 const { RepairsModel } = require("../database/index");
+const { Op } = require("sequelize");
 
 class RepairService {
   async createRepair(repair) {
@@ -15,10 +16,12 @@ class RepairService {
     }
   }
 
-  // 获取待审核
+  // 获取待审核和通过审核
   async findRepairPending() {
     try {
-      return await RepairsModel.findAll({ where: { status: "pending" } });
+      return await RepairsModel.findAll({
+        where: { status: { [Op.or]: ["pending", "in_progress"] } },
+      });
     } catch (error) {
       throw new Error(error.message);
     }

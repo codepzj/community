@@ -75,6 +75,20 @@ CREATE TABLE carts (
     FOREIGN KEY (goods_id) REFERENCES goods(id) ON DELETE CASCADE
 );
 
+-- 缴费记录表 (payments)
+CREATE TABLE payments (
+    id           INT AUTO_INCREMENT PRIMARY KEY, -- 缴费记录ID
+    resident_id  INT NOT NULL,                  -- 居民ID（外键，可关联居民表）
+    water_fee    DECIMAL(10,2) NULL,        -- 水费
+    electricity_fee DECIMAL(10,2) NULL,     -- 电费
+    property_fee DECIMAL(10,2) NULL,        -- 物业费
+    total_amount DECIMAL(10,2) AS (water_fee + electricity_fee + property_fee) STORED, -- 总费用
+    payment_status ENUM('pending', 'paid') DEFAULT 'pending', -- 支付状态
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (resident_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- 订单表 (orders)
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
