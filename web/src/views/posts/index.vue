@@ -1,227 +1,149 @@
-<!-- Forum.vue -->
 <template>
   <div class="forum-container">
-    <h1 class="forum-title">社区论坛</h1>
-
-    <!-- 帖子列表 -->
-    <div class="posts-list">
-      <el-card v-for="post in posts" :key="post.id" class="post-card">
-        <template #header>
-          <div class="post-header">
-            <span class="post-title">{{ post.title }}</span>
-            <span class="post-time">{{ formatTime(post.createdAt) }}</span>
-          </div>
-        </template>
-        <div class="post-content">{{ post.content }}</div>
-        <div class="post-footer">
-          <span>作者ID: {{ post.user_id }}</span>
-          <span>最后更新: {{ formatTime(post.updatedAt) }}</span>
-        </div>
-      </el-card>
-      <el-empty v-if="!posts.length" description="暂无帖子" :image-size="120" />
+    <h1 class="text-4xl font-bold text-center my-6">社区论坛</h1>
+    
+    <div v-for="post in posts" :key="post.id" class="post-item">
+      <PostItem :post="post" @reply="handleReply" />
     </div>
-
-    <!-- 发表新帖子 -->
-    <div class="new-post">
-      <el-form :model="newPost" ref="postForm" @submit.prevent="submitPost">
+    <Card>
+      <el-form class="new-post-form" @submit.prevent="submitPost">
         <el-form-item>
-          <el-input
-            v-model="newPost.title"
-            placeholder="请输入标题"
-            class="title-input"
-          ></el-input>
+          <el-input v-model="postForm.title" placeholder="输入帖子标题" class="my-6"></el-input>
+          <el-input v-model="postForm.content" placeholder="输入新帖子内容" type="textarea" rows="3"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input
-            type="textarea"
-            v-model="newPost.content"
-            placeholder="请输入内容"
-            :rows="4"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitPost" :loading="submitting">
-            发表帖子
-          </el-button>
+          <div class="flex justify-end">
+            <el-button type="primary" @click="submitPost">发布</el-button>
+          </div>
         </el-form-item>
       </el-form>
-    </div>
+    </Card>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted } from "vue";
-import { ElMessage } from "element-plus";
 import { getAllPostsList, postPosts } from "@/api/posts";
+import PostItem from "./post-item.vue";
+import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/users";
 import { storeToRefs } from "pinia";
 
-// 定义帖子接口
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  user_id: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// 定义新帖子接口
-interface NewPost {
-  title: string;
-  content: string;
-}
-
-// 显式声明类型
-const posts = ref<Post[]>([]);
-const newPost = ref<NewPost>({ title: "", content: "" });
-const postForm = ref(null);
-const submitting = ref(false);
-
+const posts = ref([]);
+const postForm = ref({
+  title: "",
+  content: "",
+  reply_id: null,
+});
 const { user } = storeToRefs(useUserStore());
 
-// 格式化时间
-const formatTime = (timestamp: string): string => {
-  return new Date(timestamp).toLocaleString("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-// 获取帖子列表
 const fetchPosts = async () => {
   try {
     const res = await getAllPostsList();
-    if (res.data && Array.isArray(res.data)) {
+    if (res.code === 200) {
       posts.value = res.data;
     }
   } catch (error) {
-    ElMessage.error("获取帖子列表失败");
-    console.error("Error fetching posts:", error);
+    ElMessage.error("获取帖子失败");
   }
 };
 
-// 提交新帖子
 const submitPost = async () => {
-  if (!newPost.value.title || !newPost.value.content) {
-    ElMessage.error("标题和内容不能为空！");
-    return;
-  }
-
+  if (!postForm.value.title.trim() || !postForm.value.content.trim()) return;
   if (!user.value?.id) {
-    ElMessage.error("请先登录！");
+    ElMessage.error("请先登录");
     return;
   }
-
-  submitting.value = true;
   try {
-    const postData = {
-      user_id: user.value.id,
-      title: newPost.value.title,
-      content: newPost.value.content,
-    };
-
-    const res = await postPosts(postData);
-    if (res.data) {
-      await fetchPosts();
-      newPost.value = { title: "", content: "" }; // 重置表单
-      ElMessage.success("帖子发表成功！");
-    }
+    await postPosts({ 
+      user_id: user.value.id, 
+      reply_id: null, 
+      title: postForm.value.title, 
+      content: postForm.value.content 
+    });
+    ElMessage.success("发布成功");
+    postForm.value.title = "";
+    postForm.value.content = "";
+    fetchPosts();
   } catch (error) {
-    ElMessage.error("发表帖子失败");
-    console.error("Error posting:", error);
-  } finally {
-    submitting.value = false;
+    ElMessage.error("发布失败");
   }
 };
 
-// 组件挂载时获取帖子
-onMounted(() => {
-  fetchPosts();
-});
+const handleReply = async ({ reply_id, content }) => {
+  if (!user.value?.id) {
+    ElMessage.error("请先登录");
+    return;
+  }
+  if (!content.trim()) {
+    ElMessage.error("回复内容不能为空");
+    return;
+  }
+  try {
+    await postPosts({ 
+      user_id: user.value.id, 
+      reply_id, 
+      title: "", // 回复可以不需要标题，或根据需求设置默认值
+      content 
+    });
+    ElMessage.success("回复成功");
+    fetchPosts(); // 刷新帖子列表
+  } catch (error) {
+    ElMessage.error("回复失败");
+  }
+};
+
+onMounted(fetchPosts);
 </script>
 
 <style scoped>
 .forum-container {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 30px;
-  min-height: 100vh;
+  padding: 20px;
 }
 
-.forum-title {
-  text-align: center;
-  color: #1f2937;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 40px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.post-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.posts-list {
-  margin-bottom: 50px;
-}
-
-.post-card {
-  margin-bottom: 25px;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.post-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+.post-item:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .post-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(to right, #f1f5f9, #fff);
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 10px;
 }
 
 .post-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .post-time {
-  font-size: 0.875rem;
-  color: #6b7280;
-  background: #e5e7eb;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-size: 14px;
+  color: #666;
 }
 
 .post-content {
-  color: #4b5563;
-  font-size: 1rem;
-  line-height: 1.75;
-  padding: 20px;
+  margin-bottom: 10px;
 }
 
 .post-footer {
-  font-size: 0.875rem;
-  color: #6b7280;
   display: flex;
   justify-content: space-between;
-  padding: 10px 20px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
+  align-items: center;
 }
 
-.new-post {
-  background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+.reply-form {
+  margin-top: 10px;
 }
 </style>

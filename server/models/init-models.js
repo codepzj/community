@@ -24,6 +24,8 @@ function initModels(sequelize) {
 
   carts.belongsTo(goods, { as: "good", foreignKey: "goods_id"});
   goods.hasMany(carts, { as: "carts", foreignKey: "goods_id"});
+  posts.belongsTo(posts, { as: "reply", foreignKey: "reply_id"});
+  posts.hasMany(posts, { as: "posts", foreignKey: "reply_id"});
   goods.belongsTo(repair_type, { as: "type", foreignKey: "type_id"});
   repair_type.hasMany(goods, { as: "goods", foreignKey: "type_id"});
   repairs.belongsTo(repair_type, { as: "type", foreignKey: "type_id"});

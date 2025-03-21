@@ -15,6 +15,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    reply_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'posts',
+        key: 'id'
+      }
+    },
     title: {
       type: DataTypes.STRING(255),
       allowNull: false
@@ -41,6 +49,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "user_id" },
+        ]
+      },
+      {
+        name: "reply_id",
+        using: "BTREE",
+        fields: [
+          { name: "reply_id" },
         ]
       },
     ]
